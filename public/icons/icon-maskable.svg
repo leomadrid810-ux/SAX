@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#F97316"/>
+  <!-- Mismo emblema, reducido al 78% y centrado para la zona segura del maskable -->
+  <g transform="translate(256,256) scale(0.78) translate(-256,-242)">
+    <g fill="#FFFFFF">
+      <rect x="231" y="46" width="11" height="52" rx="5.5"/>
+      <rect x="250" y="46" width="11" height="52" rx="5.5"/>
+      <rect x="269" y="46" width="11" height="52" rx="5.5"/>
+      <path d="M225 94 h61 v8 a30 30 0 0 1 -61 0 z"/>
+      <rect x="248" y="118" width="15" height="60" rx="7.5"/>
+      <path d="M256 150 L388 274 H124 Z"/>
+      <rect x="152" y="266" width="208" height="172" rx="18"/>
+    </g>
+    <path d="M234 438 V360 a22 22 0 0 1 44 0 V438 Z" fill="#F97316"/>
+    <circle cx="190" cy="320" r="13" fill="#F97316"/>
+    <circle cx="322" cy="320" r="13" fill="#F97316"/>
+  </g>
+</svg>

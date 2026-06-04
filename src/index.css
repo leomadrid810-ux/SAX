@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-white text-marca-texto font-sans text-base antialiased;
+    margin: 0;
+  }
+  /* Mínimo 16px en todo */
+  input,
+  textarea,
+  select,
+  button {
+    font-size: 16px;
+  }
+}
+
+@layer components {
+  /* Botón base grande y fácil de tocar */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-base font-bold transition active:scale-[0.97] select-none;
+    min-height: 48px;
+  }
+  .btn-primario {
+    @apply btn bg-marca-naranja text-white shadow-sm hover:brightness-95;
+  }
+  .btn-secundario {
+    @apply btn bg-marca-rojo text-white shadow-sm hover:brightness-95;
+  }
+  .btn-suave {
+    @apply btn bg-marca-tarjeta text-marca-texto border border-gray-200 hover:bg-gray-100;
+  }
+  .btn-whatsapp {
+    @apply btn bg-[#25D366] text-white shadow-sm hover:brightness-95;
+  }
+  .campo {
+    @apply w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-marca-texto outline-none focus:border-marca-naranja focus:ring-2 focus:ring-marca-naranja/30;
+    min-height: 48px;
+  }
+  .etiqueta {
+    @apply mb-1 block text-sm font-bold text-gray-600;
+  }
+  .tarjeta {
+    @apply rounded-3xl bg-marca-tarjeta border border-gray-100 shadow-sm overflow-hidden;
+  }
+}
+
+/* Scrollbar horizontal de filtros sin barra visible */
+.scroll-oculto::-webkit-scrollbar {
+  display: none;
+}
+.scroll-oculto {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Fondo de marca -->
+  <rect width="512" height="512" rx="112" fill="#F97316"/>
+
+  <!-- Iglesia + tenedor (campanario), estilo minimalista -->
+  <g fill="#FFFFFF">
+    <!-- Tenedor como campanario: púas -->
+    <rect x="231" y="46" width="11" height="52" rx="5.5"/>
+    <rect x="250" y="46" width="11" height="52" rx="5.5"/>
+    <rect x="269" y="46" width="11" height="52" rx="5.5"/>
+    <!-- Cuello del tenedor -->
+    <path d="M225 94 h61 v8 a30 30 0 0 1 -61 0 z"/>
+    <!-- Asta / mango (se integra como torre del campanario) -->
+    <rect x="248" y="118" width="15" height="60" rx="7.5"/>
+
+    <!-- Techo de la iglesia -->
+    <path d="M256 150 L388 274 H124 Z"/>
+    <!-- Nave (cuerpo) -->
+    <rect x="152" y="266" width="208" height="172" rx="18"/>
+  </g>
+
+  <!-- Puerta (recorte en color de fondo) -->
+  <path d="M234 438 V360 a22 22 0 0 1 44 0 V438 Z" fill="#F97316"/>
+  <!-- Ventanas -->
+  <circle cx="190" cy="320" r="13" fill="#F97316"/>
+  <circle cx="322" cy="320" r="13" fill="#F97316"/>
+</svg>
