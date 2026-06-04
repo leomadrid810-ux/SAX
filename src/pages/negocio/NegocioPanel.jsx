@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useTienda } from '../../store/tienda'
 import { sesionNegocio } from '../../store/sesion'
@@ -13,6 +14,7 @@ import {
 export default function NegocioPanel() {
   const {
     restaurantes,
+    cargando,
     actualizarRestaurante,
     fijarEstadoManual,
     usarHorarioAutomatico,
@@ -25,6 +27,15 @@ export default function NegocioPanel() {
   const salir = () => {
     sesionNegocio.cerrar()
     navigate('/negocio/login', { replace: true })
+  }
+
+  // Mientras carga desde la nube
+  if (!rest && cargando) {
+    return (
+      <div className="flex min-h-screen items-center justify-center text-gray-500">
+        Cargando tu negocio…
+      </div>
+    )
   }
 
   // Si la cuenta ya no existe (ej. eliminada por admin)
@@ -42,12 +53,12 @@ export default function NegocioPanel() {
     )
   }
 
-  const guardar = (datos) => {
+  const guardar = async (datos) => {
     // El dueño no puede cambiar su usuario/contraseña ni el estado activo desde aquí:
     // se conservan los valores actuales.
     const { usuario, password, activo, ...editable } = datos
-    actualizarRestaurante(rest.id, editable)
-    alert('¡Cambios guardados!')
+    const ok = await actualizarRestaurante(rest.id, editable)
+    if (ok) alert('¡Cambios guardados!')
   }
 
   return (

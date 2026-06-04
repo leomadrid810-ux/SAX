@@ -22,7 +22,7 @@ export default function AdminPanel() {
     restaurantes,
     solicitudes,
     categorias,
-    adminPassword,
+    cargando,
     agregarRestaurante,
     actualizarRestaurante,
     eliminarRestaurante,
@@ -30,25 +30,25 @@ export default function AdminPanel() {
     actualizarSolicitud,
     eliminarSolicitud,
     cambiarAdminPassword,
-    reiniciarDatos,
   } = useTienda()
   const navigate = useNavigate()
 
   const [pestana, setPestana] = useState('restaurantes')
   const [editando, setEditando] = useState(null) // restaurante o {nuevo:true}
+  const [guardando, setGuardando] = useState(false)
 
   const salir = () => {
     sesionAdmin.cerrar()
     navigate('/admin/login', { replace: true })
   }
 
-  const guardar = (datos) => {
-    if (editando?.nuevo) {
-      agregarRestaurante(datos)
-    } else {
-      actualizarRestaurante(editando.id, datos)
-    }
-    setEditando(null)
+  const guardar = async (datos) => {
+    setGuardando(true)
+    const ok = editando?.nuevo
+      ? await agregarRestaurante(datos)
+      : await actualizarRestaurante(editando.id, datos)
+    setGuardando(false)
+    if (ok) setEditando(null)
   }
 
   const nombresCats = (r) =>
@@ -103,7 +103,10 @@ export default function AdminPanel() {
               <IconoMas width={20} height={20} /> Agregar restaurante
             </button>
 
-            {restaurantes.length === 0 && (
+            {cargando && restaurantes.length === 0 && (
+              <p className="py-10 text-center text-gray-500">Cargando…</p>
+            )}
+            {!cargando && restaurantes.length === 0 && (
               <p className="py-10 text-center text-gray-500">
                 Aún no hay restaurantes. Agrega el primero.
               </p>
@@ -242,11 +245,7 @@ export default function AdminPanel() {
 
         {/* ---- AJUSTES ---- */}
         {pestana === 'ajustes' && (
-          <Ajustes
-            adminPassword={adminPassword}
-            cambiarAdminPassword={cambiarAdminPassword}
-            reiniciarDatos={reiniciarDatos}
-          />
+          <Ajustes cambiarAdminPassword={cambiarAdminPassword} />
         )}
       </main>
 
@@ -268,9 +267,21 @@ export default function AdminPanel() {
   )
 }
 
-function Ajustes({ adminPassword, cambiarAdminPassword, reiniciarDatos }) {
+function Ajustes({ cambiarAdminPassword }) {
   const [nueva, setNueva] = useState('')
   const [msg, setMsg] = useState('')
+
+  const guardarPassword = async () => {
+    if (nueva.trim().length < 4) {
+      setMsg('La contraseña debe tener al menos 4 caracteres.')
+      return
+    }
+    const ok = await cambiarAdminPassword(nueva.trim())
+    if (ok) {
+      setNueva('')
+      setMsg('Contraseña actualizada correctamente.')
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -284,40 +295,20 @@ function Ajustes({ adminPassword, cambiarAdminPassword, reiniciarDatos }) {
             value={nueva}
             onChange={(e) => setNueva(e.target.value)}
           />
-          <button
-            onClick={() => {
-              if (nueva.trim().length < 4) {
-                setMsg('La contraseña debe tener al menos 4 caracteres.')
-                return
-              }
-              cambiarAdminPassword(nueva.trim())
-              setNueva('')
-              setMsg('Contraseña actualizada correctamente.')
-            }}
-            className="btn-primario w-full"
-          >
+          <button onClick={guardarPassword} className="btn-primario w-full">
             Guardar contraseña
           </button>
           {msg && <p className="text-sm font-semibold text-green-600">{msg}</p>}
-          <p className="text-xs text-gray-400">Contraseña actual: {adminPassword}</p>
         </div>
       </div>
 
       <div className="tarjeta p-4">
-        <h3 className="mb-2 font-black text-marca-texto">Restablecer datos de ejemplo</h3>
-        <p className="mb-3 text-sm text-gray-500">
-          Borra todos los cambios y vuelve a los 3 restaurantes de ejemplo.
+        <h3 className="mb-2 font-black text-marca-texto">Datos en la nube</h3>
+        <p className="text-sm text-gray-500">
+          Todos los datos se guardan en Supabase y se comparten en tiempo real entre
+          todos los dispositivos. Los cambios que hagas aquí los verán al instante los
+          clientes y los demás dispositivos.
         </p>
-        <button
-          onClick={() => {
-            if (confirm('¿Restablecer TODOS los datos a los de ejemplo? Se perderán los cambios.')) {
-              reiniciarDatos()
-            }
-          }}
-          className="btn-secundario w-full"
-        >
-          Restablecer datos
-        </button>
       </div>
     </div>
   )

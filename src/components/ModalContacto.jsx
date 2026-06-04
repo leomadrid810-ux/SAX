@@ -16,14 +16,18 @@ export default function ModalContacto({ onCerrar }) {
 
   const cambiar = (campo) => (e) => setForm({ ...form, [campo]: e.target.value })
 
-  const enviar = (e) => {
+  const [enviando, setEnviando] = useState(false)
+
+  const enviar = async (e) => {
     e.preventDefault()
     if (!form.nombreNegocio.trim() || !form.whatsapp.trim()) return
-    agregarSolicitud({
+    setEnviando(true)
+    const ok = await agregarSolicitud({
       ...form,
       fecha: new Date().toISOString().slice(0, 10),
     })
-    setEnviado(true)
+    setEnviando(false)
+    if (ok) setEnviado(true)
   }
 
   if (enviado) {
@@ -92,8 +96,8 @@ export default function ModalContacto({ onCerrar }) {
             placeholder="Cuéntanos sobre tu negocio"
           />
         </div>
-        <button type="submit" className="btn-primario w-full">
-          Enviar solicitud
+        <button type="submit" className="btn-primario w-full" disabled={enviando}>
+          {enviando ? 'Enviando…' : 'Enviar solicitud'}
         </button>
       </form>
     </Modal>

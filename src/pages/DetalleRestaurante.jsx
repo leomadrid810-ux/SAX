@@ -28,12 +28,20 @@ import {
 
 export default function DetalleRestaurante() {
   const { id } = useParams()
-  const { restaurantes, categorias } = useTienda()
+  const { restaurantes, categorias, cargando } = useTienda()
   const [mostrarAyuda, setMostrarAyuda] = useState(false)
   const [verHorario, setVerHorario] = useState(false)
   const [productoSel, setProductoSel] = useState(null)
 
   const rest = restaurantes.find((r) => r.id === id)
+
+  if (!rest && cargando) {
+    return (
+      <div className="flex min-h-screen items-center justify-center text-gray-500">
+        Cargando…
+      </div>
+    )
+  }
 
   if (!rest) {
     return (

@@ -9,7 +9,7 @@ import { IconoBuscar, IconoAyuda, IconoSobre, IconoCandado, IconoTienda } from '
 import { estaAbiertoEfectivo, categoriasDe } from '../utils/helpers'
 
 export default function Inicio() {
-  const { restaurantes, categorias } = useTienda()
+  const { restaurantes, categorias, cargando, error } = useTienda()
   const [busqueda, setBusqueda] = useState('')
   const [categoria, setCategoria] = useState('todas')
   const [mostrarAyuda, setMostrarAyuda] = useState(false)
@@ -115,10 +115,30 @@ export default function Inicio() {
 
       {/* Contenido */}
       <main className="mx-auto max-w-3xl px-4 pt-4">
-        {filtrados.length === 0 ? (
+        {error === 'config' ? (
+          <div className="flex flex-col items-center gap-3 py-16 text-center text-gray-500">
+            <span className="text-5xl">🔌</span>
+            <p className="font-bold text-marca-texto">Base de datos no configurada</p>
+            <p className="text-sm">
+              Falta conectar Supabase. Agrega las variables{' '}
+              <code>VITE_SUPABASE_URL</code> y <code>VITE_SUPABASE_ANON_KEY</code>.
+            </p>
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center gap-3 py-16 text-center text-gray-500">
+            <span className="text-5xl">⚠️</span>
+            <p className="font-bold text-marca-texto">No se pudieron cargar los negocios</p>
+            <p className="text-sm">Revisa tu conexión e inténtalo de nuevo.</p>
+          </div>
+        ) : cargando && restaurantes.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-16 text-center text-gray-500">
+            <span className="text-4xl animate-pulse">🍴</span>
+            <p className="font-bold text-marca-texto">Cargando negocios…</p>
+          </div>
+        ) : filtrados.length === 0 ? (
           <div className="flex flex-col items-center gap-3 py-16 text-center text-gray-500">
             <span className="text-5xl">🍽️</span>
-            <p className="font-bold text-marca-texto">No encontramos restaurantes</p>
+            <p className="font-bold text-marca-texto">No encontramos negocios</p>
             <p className="text-sm">Prueba con otra categoría o cambia tu búsqueda.</p>
           </div>
         ) : (

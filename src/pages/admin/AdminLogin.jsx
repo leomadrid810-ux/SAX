@@ -10,9 +10,14 @@ export default function AdminLogin() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
 
-  const entrar = (e) => {
+  const [verificando, setVerificando] = useState(false)
+
+  const entrar = async (e) => {
     e.preventDefault()
-    if (validarAdmin(password)) {
+    setVerificando(true)
+    const ok = await validarAdmin(password)
+    setVerificando(false)
+    if (ok) {
       sesionAdmin.iniciar()
       navigate('/admin/panel', { replace: true })
     } else {
@@ -49,8 +54,8 @@ export default function AdminLogin() {
               />
             </div>
             {error && <p className="text-sm font-semibold text-marca-rojo">{error}</p>}
-            <button type="submit" className="btn-primario w-full">
-              Entrar
+            <button type="submit" className="btn-primario w-full" disabled={verificando}>
+              {verificando ? 'Verificando…' : 'Entrar'}
             </button>
           </form>
           <p className="mt-4 text-center text-xs text-gray-400">

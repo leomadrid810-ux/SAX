@@ -267,7 +267,14 @@ export default function EditorRestaurante({
               value={form.password}
               onChange={set('password')}
               autoComplete="off"
+              placeholder={restaurante ? 'Dejar en blanco para no cambiarla' : ''}
             />
+            {restaurante && (
+              <p className="mt-1 text-xs text-gray-400">
+                Por seguridad no se muestra la contraseña actual. Escribe una nueva solo
+                si quieres cambiarla.
+              </p>
+            )}
           </div>
         </section>
       )}
