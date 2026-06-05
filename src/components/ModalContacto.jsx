@@ -27,7 +27,23 @@ export default function ModalContacto({ onCerrar }) {
       fecha: new Date().toISOString().slice(0, 10),
     })
     setEnviando(false)
-    if (ok) setEnviado(true)
+    if (!ok) return
+
+    const lineas = [
+      '¡Hola! Quiero unir mi negocio a SAX 🍽️',
+      '',
+      `📍 *Negocio:* ${form.nombreNegocio}`,
+      form.contacto ? `👤 *Contacto:* ${form.contacto}` : '',
+      `📱 *WhatsApp:* ${form.whatsapp}`,
+      form.mensaje ? `💬 *Mensaje:* ${form.mensaje}` : '',
+    ].filter(Boolean).join('\n')
+
+    window.open(
+      `https://wa.me/522481305845?text=${encodeURIComponent(lineas)}`,
+      '_blank',
+      'noopener,noreferrer',
+    )
+    setEnviado(true)
   }
 
   if (enviado) {
