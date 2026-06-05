@@ -227,4 +227,26 @@ select set_credenciales('a0000000-0000-0000-0000-000000000003','sirena123');
 insert into solicitudes (nombre_negocio, contacto, whatsapp, mensaje, fecha, estado)
 values ('Pollos El Buen Sabor','María González','5215511223344','Tenemos un local de pollos rostizados y nos gustaría aparecer en la app.','2026-05-28','pendiente');
 
+-- ---------- STORAGE: Bucket de imágenes ----------
+-- Bucket público "fotos" para subir imágenes desde el panel de negocio y admin.
+
+insert into storage.buckets (id, name, public)
+values ('fotos', 'fotos', true)
+on conflict (id) do nothing;
+
+-- Lectura pública (cualquiera puede ver las fotos)
+drop policy if exists "fotos_lectura_publica" on storage.objects;
+create policy "fotos_lectura_publica" on storage.objects
+  for select using (bucket_id = 'fotos');
+
+-- Subida permitida desde la app (anon key)
+drop policy if exists "fotos_subida_anonima" on storage.objects;
+create policy "fotos_subida_anonima" on storage.objects
+  for insert with check (bucket_id = 'fotos');
+
+-- Reemplazar fotos existentes (upsert)
+drop policy if exists "fotos_actualizacion_anonima" on storage.objects;
+create policy "fotos_actualizacion_anonima" on storage.objects
+  for update using (bucket_id = 'fotos');
+
 -- ✅ Listo. La app ya puede leer y escribir aquí.

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTienda } from '../store/tienda'
 import ImagenSegura from './ImagenSegura'
+import SubidorFoto from './SubidorFoto'
 import { IconoMas, IconoBasura, IconoLapiz } from './Iconos'
 import {
   nuevoId,
@@ -182,21 +183,12 @@ export default function EditorRestaurante({
           </div>
         </div>
         <div>
-          <label className="etiqueta">Foto (URL)</label>
-          <input
-            className="campo"
-            value={form.foto}
-            onChange={set('foto')}
-            placeholder="https://..."
-            inputMode="url"
+          <label className="etiqueta">Foto del negocio</label>
+          <SubidorFoto
+            valor={form.foto}
+            onChange={(url) => setForm((f) => ({ ...f, foto: url }))}
+            carpeta="negocios"
           />
-          {form.foto && (
-            <ImagenSegura
-              src={form.foto}
-              alt="Vista previa"
-              className="mt-2 h-32 w-full rounded-2xl object-cover"
-            />
-          )}
         </div>
         <div>
           <label className="etiqueta">Descripción / presentación del negocio</label>
@@ -408,14 +400,11 @@ export default function EditorRestaurante({
                     }
                     placeholder="Descripción"
                   />
-                  <input
-                    className="campo mt-2 py-2"
-                    value={p.foto}
-                    onChange={(e) =>
-                      cambiarProducto(seccion.id, p.id, 'foto', e.target.value)
-                    }
-                    placeholder="Foto del producto (URL)"
-                    inputMode="url"
+                  <SubidorFoto
+                    valor={p.foto}
+                    onChange={(url) => cambiarProducto(seccion.id, p.id, 'foto', url)}
+                    carpeta="productos"
+                    className="mt-2"
                   />
                 </div>
               ))}
