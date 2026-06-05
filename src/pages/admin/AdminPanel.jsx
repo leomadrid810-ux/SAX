@@ -258,6 +258,7 @@ export default function AdminPanel() {
           <EditorRestaurante
             restaurante={editando.nuevo ? null : editando}
             permitirCredenciales
+            permitirCategorias
             onGuardar={guardar}
             onCancelar={() => setEditando(null)}
           />

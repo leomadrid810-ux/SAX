@@ -17,11 +17,13 @@ import {
 //  - restaurante: objeto existente o null (para crear)
 //  - onGuardar(datos), onCancelar()
 //  - permitirCredenciales: muestra usuario/contraseña (panel admin)
+//  - permitirCategorias: permite editar categorías (solo panel admin)
 export default function EditorRestaurante({
   restaurante,
   onGuardar,
   onCancelar,
   permitirCredenciales = false,
+  permitirCategorias = false,
 }) {
   const { categorias } = useTienda()
 
@@ -163,28 +165,47 @@ export default function EditorRestaurante({
           <input className="campo" value={form.nombre} onChange={set('nombre')} required />
         </div>
         <div>
-          <label className="etiqueta">Categorías (elige una o varias)</label>
-          <div className="grid grid-cols-2 gap-2">
-            {categorias.map((c) => {
-              const activa = form.categorias.includes(c.id)
-              return (
-                <button
-                  type="button"
-                  key={c.id}
-                  onClick={() => alternarCategoria(c.id)}
-                  className={`flex items-center gap-2 rounded-2xl border px-3 py-2.5 text-left text-sm font-bold transition ${
-                    activa
-                      ? 'border-marca-naranja bg-orange-50 text-marca-naranja'
-                      : 'border-gray-200 bg-white text-marca-texto'
-                  }`}
-                >
-                  <span className="text-lg">{c.icono}</span>
-                  <span className="flex-1">{c.nombre}</span>
-                  {activa && <span className="text-marca-naranja">✓</span>}
-                </button>
-              )
-            })}
-          </div>
+          <label className="etiqueta">Categorías</label>
+          {permitirCategorias ? (
+            <div className="grid grid-cols-2 gap-2">
+              {categorias.map((c) => {
+                const activa = form.categorias.includes(c.id)
+                return (
+                  <button
+                    type="button"
+                    key={c.id}
+                    onClick={() => alternarCategoria(c.id)}
+                    className={`flex items-center gap-2 rounded-2xl border px-3 py-2.5 text-left text-sm font-bold transition ${
+                      activa
+                        ? 'border-marca-naranja bg-orange-50 text-marca-naranja'
+                        : 'border-gray-200 bg-white text-marca-texto'
+                    }`}
+                  >
+                    <span className="text-lg">{c.icono}</span>
+                    <span className="flex-1">{c.nombre}</span>
+                    {activa && <span className="text-marca-naranja">✓</span>}
+                  </button>
+                )
+              })}
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {form.categorias.length > 0
+                ? form.categorias.map((id) => {
+                    const cat = categorias.find((c) => c.id === id)
+                    return cat ? (
+                      <span
+                        key={id}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1.5 text-sm font-bold text-marca-naranja"
+                      >
+                        <span>{cat.icono}</span> {cat.nombre}
+                      </span>
+                    ) : null
+                  })
+                : <p className="text-sm text-gray-400">Sin categorías asignadas. Contacta al administrador.</p>
+              }
+            </div>
+          )}
         </div>
         <div>
           <label className="etiqueta">Foto del negocio</label>
