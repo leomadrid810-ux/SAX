@@ -106,7 +106,7 @@ export default function Inicio() {
               ref={refBusqueda}
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
-              placeholder="Buscar restaurante por nombre..."
+              placeholder="Buscar negocio por nombre..."
               className="campo pl-11"
               type="search"
             />

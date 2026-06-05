@@ -13,6 +13,9 @@ export const CATEGORIAS = [
   { id: 'neverias', nombre: 'Neverías y Heladerías', icono: '🍦' },
   { id: 'postres', nombre: 'Postres', icono: '🍰' },
   { id: 'snacks', nombre: 'Snacks', icono: '🍿' },
+  { id: 'carniceria', nombre: 'Carnicerías', icono: '🥩' },
+  { id: 'belleza', nombre: 'Salones de belleza', icono: '💇' },
+  { id: 'ropa', nombre: 'Ropa y calzado', icono: '👗' },
 ]
 
 // Horario estándar de ejemplo (lun-dom). apertura/cierre en formato 24h "HH:MM".
