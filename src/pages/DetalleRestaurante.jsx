@@ -24,6 +24,7 @@ import {
   enlaceTelefono,
   enlaceMaps,
   enlaceSocial,
+  tituloMenu,
   categoriasDe,
   esNuevo,
   DIAS_NOMBRE,
@@ -230,8 +231,10 @@ export default function DetalleRestaurante() {
           )}
         </div>
 
-        {/* Menú */}
-        <h2 className="mb-1 mt-8 text-xl font-black text-marca-texto">Menú</h2>
+        {/* Menú / Servicios / Productos según categoría */}
+        <h2 className="mb-1 mt-8 text-xl font-black text-marca-texto">
+          {tituloMenu(categoriasDe(rest))}
+        </h2>
         {(!rest.menu || rest.menu.length === 0) && (
           <p className="py-6 text-center text-gray-500">
             Este restaurante aún no tiene productos en su menú.

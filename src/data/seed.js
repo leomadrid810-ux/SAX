@@ -16,6 +16,17 @@ export const CATEGORIAS = [
   { id: 'carniceria', nombre: 'Carnicerías', icono: '🥩' },
   { id: 'belleza', nombre: 'Salones de belleza', icono: '💇' },
   { id: 'ropa', nombre: 'Ropa y calzado', icono: '👗' },
+  { id: 'tortilleria', nombre: 'Tortillerías', icono: '🫓' },
+  { id: 'jugos', nombre: 'Jugos y licuados', icono: '🥤' },
+  { id: 'polleria', nombre: 'Pollerías', icono: '🍗' },
+  { id: 'panaderia', nombre: 'Panaderías', icono: '🥐' },
+  { id: 'barberia', nombre: 'Barberías', icono: '✂️' },
+  { id: 'lavanderia', nombre: 'Lavanderías', icono: '👕' },
+  { id: 'ferreteria', nombre: 'Ferreterías', icono: '🔧' },
+  { id: 'papeleria', nombre: 'Papelerías', icono: '📝' },
+  { id: 'taller', nombre: 'Talleres mecánicos', icono: '🔩' },
+  { id: 'gimnasio', nombre: 'Gimnasios', icono: '💪' },
+  { id: 'electronica', nombre: 'Electrónica y celulares', icono: '📱' },
 ]
 
 // Horario estándar de ejemplo (lun-dom). apertura/cierre en formato 24h "HH:MM".

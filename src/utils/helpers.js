@@ -134,6 +134,19 @@ export function categoriasDe(rest) {
   return []
 }
 
+// Título de la sección de productos según las categorías del negocio
+const CATS_SERVICIOS = new Set([
+  'belleza', 'barberia', 'lavanderia', 'ferreteria',
+  'taller', 'gimnasio', 'electronica', 'ropa',
+])
+const CATS_PRODUCTOS = new Set(['carniceria', 'papeleria'])
+
+export function tituloMenu(cats = []) {
+  if (cats.some((c) => CATS_SERVICIOS.has(c))) return 'Servicios y precios'
+  if (cats.some((c) => CATS_PRODUCTOS.has(c))) return 'Productos'
+  return 'Menú'
+}
+
 // Construye la URL correcta para abrir una red social dado un valor libre
 // (usuario "@fulanito", URL completa o nombre de página).
 export function enlaceSocial(tipo, valor) {
