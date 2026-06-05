@@ -52,6 +52,10 @@ export function TiendaProvider({ children }) {
         direccion: n.direccion || '',
         telefono: n.telefono || '',
         whatsapp: n.whatsapp || '',
+        facebook: n.facebook || '',
+        instagram: n.instagram || '',
+        tiktok: n.tiktok || '',
+        sitio_web: n.sitio_web || '',
         usuario: n.usuario || '',
         activo: n.activo,
         creado: n.creado,
@@ -131,6 +135,10 @@ export function TiendaProvider({ children }) {
     if (datos.direccion !== undefined) obj.direccion = datos.direccion
     if (datos.telefono !== undefined) obj.telefono = datos.telefono
     if (datos.whatsapp !== undefined) obj.whatsapp = datos.whatsapp
+    if (datos.facebook !== undefined) obj.facebook = datos.facebook || null
+    if (datos.instagram !== undefined) obj.instagram = datos.instagram || null
+    if (datos.tiktok !== undefined) obj.tiktok = datos.tiktok || null
+    if (datos.sitio_web !== undefined) obj.sitio_web = datos.sitio_web || null
     if (datos.usuario !== undefined) obj.usuario = datos.usuario || null
     if (datos.activo !== undefined) obj.activo = datos.activo
     if (datos.creado !== undefined) obj.creado = datos.creado

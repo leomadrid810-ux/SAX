@@ -227,6 +227,14 @@ select set_credenciales('a0000000-0000-0000-0000-000000000003','sirena123');
 insert into solicitudes (nombre_negocio, contacto, whatsapp, mensaje, fecha, estado)
 values ('Pollos El Buen Sabor','María González','5215511223344','Tenemos un local de pollos rostizados y nos gustaría aparecer en la app.','2026-05-28','pendiente');
 
+-- ---------- MIGRACIÓN: Columnas de redes sociales ----------
+-- Ejecuta esto si la tabla negocios ya existe (es idempotente).
+alter table negocios
+  add column if not exists facebook  text,
+  add column if not exists instagram text,
+  add column if not exists tiktok    text,
+  add column if not exists sitio_web text;
+
 -- ---------- STORAGE: Bucket de imágenes ----------
 -- Bucket público "fotos" para subir imágenes desde el panel de negocio y admin.
 

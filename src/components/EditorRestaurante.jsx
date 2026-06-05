@@ -35,6 +35,10 @@ export default function EditorRestaurante({
     direccion: restaurante?.direccion || '',
     telefono: restaurante?.telefono || '',
     whatsapp: restaurante?.whatsapp || '',
+    facebook: restaurante?.facebook || '',
+    instagram: restaurante?.instagram || '',
+    tiktok: restaurante?.tiktok || '',
+    sitio_web: restaurante?.sitio_web || '',
     usuario: restaurante?.usuario || '',
     password: restaurante?.password || '',
     activo: restaurante?.activo ?? true,
@@ -231,6 +235,49 @@ export default function EditorRestaurante({
             placeholder="Ej. 5215512345678"
             inputMode="tel"
           />
+        </div>
+
+        {/* Redes sociales */}
+        <div className="rounded-2xl border border-gray-100 bg-marca-tarjeta p-4 space-y-3">
+          <p className="text-sm font-black text-marca-texto">Redes sociales y sitio web <span className="font-normal text-gray-400">(opcional)</span></p>
+          <div>
+            <label className="etiqueta">📘 Facebook</label>
+            <input
+              className="campo"
+              value={form.facebook}
+              onChange={set('facebook')}
+              placeholder="https://facebook.com/tu-pagina  o  nombre-de-pagina"
+              inputMode="url"
+            />
+          </div>
+          <div>
+            <label className="etiqueta">📸 Instagram</label>
+            <input
+              className="campo"
+              value={form.instagram}
+              onChange={set('instagram')}
+              placeholder="@tu_usuario  o  https://instagram.com/tu_usuario"
+            />
+          </div>
+          <div>
+            <label className="etiqueta">🎵 TikTok</label>
+            <input
+              className="campo"
+              value={form.tiktok}
+              onChange={set('tiktok')}
+              placeholder="@tu_usuario  o  https://tiktok.com/@tu_usuario"
+            />
+          </div>
+          <div>
+            <label className="etiqueta">🌐 Sitio web</label>
+            <input
+              className="campo"
+              value={form.sitio_web}
+              onChange={set('sitio_web')}
+              placeholder="https://tu-sitio.com"
+              inputMode="url"
+            />
+          </div>
         </div>
       </section>
 

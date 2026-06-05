@@ -13,12 +13,17 @@ import {
   IconoUbicacion,
   IconoTelefono,
   IconoComoLlegar,
+  IconoFacebook,
+  IconoInstagram,
+  IconoTikTok,
+  IconoGlobo,
 } from '../components/Iconos'
 import {
   precio,
   enlaceWhatsApp,
   enlaceTelefono,
   enlaceMaps,
+  enlaceSocial,
   categoriasDe,
   esNuevo,
   DIAS_NOMBRE,
@@ -108,6 +113,52 @@ export default function DetalleRestaurante() {
                   <span>{c.icono}</span> {c.nombre}
                 </span>
               ))}
+            </div>
+          )}
+
+          {/* Redes sociales */}
+          {(rest.facebook || rest.instagram || rest.tiktok || rest.sitio_web) && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {rest.facebook && (
+                <a
+                  href={enlaceSocial('facebook', rest.facebook)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-2xl bg-blue-50 px-4 py-2 text-sm font-bold text-blue-600 active:scale-95 transition-all"
+                >
+                  <IconoFacebook width={18} height={18} /> Facebook
+                </a>
+              )}
+              {rest.instagram && (
+                <a
+                  href={enlaceSocial('instagram', rest.instagram)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-2xl bg-pink-50 px-4 py-2 text-sm font-bold text-pink-600 active:scale-95 transition-all"
+                >
+                  <IconoInstagram width={18} height={18} /> Instagram
+                </a>
+              )}
+              {rest.tiktok && (
+                <a
+                  href={enlaceSocial('tiktok', rest.tiktok)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-2xl bg-gray-100 px-4 py-2 text-sm font-bold text-gray-800 active:scale-95 transition-all"
+                >
+                  <IconoTikTok width={18} height={18} /> TikTok
+                </a>
+              )}
+              {rest.sitio_web && (
+                <a
+                  href={enlaceSocial('sitio_web', rest.sitio_web)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 rounded-2xl bg-orange-50 px-4 py-2 text-sm font-bold text-marca-naranja active:scale-95 transition-all"
+                >
+                  <IconoGlobo width={18} height={18} /> Sitio web
+                </a>
+              )}
             </div>
           )}
 

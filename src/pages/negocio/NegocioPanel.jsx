@@ -4,6 +4,7 @@ import { useTienda } from '../../store/tienda'
 import { sesionNegocio } from '../../store/sesion'
 import EditorRestaurante from '../../components/EditorRestaurante'
 import BadgeAbierto from '../../components/BadgeAbierto'
+import TutorialNegocio from '../../components/TutorialNegocio'
 import { IconoSalir, IconoOjo, IconoReloj, IconoCheck } from '../../components/Iconos'
 import {
   estaAbiertoEfectivo,
@@ -93,7 +94,9 @@ export default function NegocioPanel() {
           usarHorarioAutomatico={usarHorarioAutomatico}
         />
 
-        <div className="mb-4 mt-6 flex items-center justify-between">
+        <TutorialNegocio />
+
+        <div className="mb-4 mt-2 flex items-center justify-between">
           <p className="text-sm text-gray-500">
             Edita tus datos y tu menú. Los cambios se ven al instante.
           </p>

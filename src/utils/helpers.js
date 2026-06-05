@@ -134,6 +134,19 @@ export function categoriasDe(rest) {
   return []
 }
 
+// Construye la URL correcta para abrir una red social dado un valor libre
+// (usuario "@fulanito", URL completa o nombre de página).
+export function enlaceSocial(tipo, valor) {
+  if (!valor) return ''
+  if (valor.startsWith('http://') || valor.startsWith('https://')) return valor
+  const v = valor.replace(/^@/, '').trim()
+  if (tipo === 'facebook') return `https://facebook.com/${v}`
+  if (tipo === 'instagram') return `https://instagram.com/${v}`
+  if (tipo === 'tiktok') return `https://tiktok.com/@${v}`
+  if (tipo === 'sitio_web') return `https://${v}`
+  return valor
+}
+
 // Horario vacío por defecto para formularios nuevos
 export function horarioVacio() {
   const base = {}
