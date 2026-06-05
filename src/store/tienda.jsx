@@ -84,6 +84,11 @@ export function TiendaProvider({ children }) {
         estado: s.estado,
       }))
 
+      // Orden aleatorio en cada carga para que la pantalla se vea variada
+      for (let i = rests.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [rests[i], rests[j]] = [rests[j], rests[i]]
+      }
       setRestaurantes(rests)
       setSolicitudes(sols)
       setError(null)
