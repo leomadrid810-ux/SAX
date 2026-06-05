@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTienda } from '../store/tienda'
 import TarjetaRestaurante from '../components/TarjetaRestaurante'
@@ -14,6 +14,16 @@ export default function Inicio() {
   const [categoria, setCategoria] = useState('todas')
   const [mostrarAyuda, setMostrarAyuda] = useState(false)
   const [mostrarContacto, setMostrarContacto] = useState(false)
+  const refBusqueda = useRef(null)
+
+  useEffect(() => {
+    const enfocar = () => {
+      refBusqueda.current?.focus()
+      refBusqueda.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+    window.addEventListener('enfocar-busqueda', enfocar)
+    return () => window.removeEventListener('enfocar-busqueda', enfocar)
+  }, [])
 
   // Solo restaurantes activos para el público
   const activos = useMemo(
@@ -51,7 +61,7 @@ export default function Inicio() {
   const categoriasConDatos = categorias.filter((c) => conteos[c.id] > 0)
 
   return (
-    <div className="min-h-screen bg-white pb-10">
+    <div className="min-h-screen bg-white pb-28">
       {/* Encabezado */}
       <header className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-100">
         <div className="mx-auto max-w-3xl px-4 pt-4 pb-3">
@@ -93,6 +103,7 @@ export default function Inicio() {
               <IconoBuscar width={20} height={20} />
             </span>
             <input
+              ref={refBusqueda}
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
               placeholder="Buscar restaurante por nombre..."

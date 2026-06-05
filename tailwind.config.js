@@ -14,6 +14,12 @@ export default {
       fontFamily: {
         sans: ['Nunito', 'Inter', 'system-ui', 'sans-serif'],
       },
+      borderRadius: {
+        '4xl': '2rem',
+      },
+      transitionTimingFunction: {
+        spring: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      },
     },
   },
   plugins: [],

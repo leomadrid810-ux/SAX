@@ -64,7 +64,7 @@ export default function DetalleRestaurante() {
   const mensajeWa = `Hola ${rest.nombre}, los contacto desde SAX. Quisiera hacer un pedido.`
 
   return (
-    <div className="min-h-screen bg-white pb-28">
+    <div className="animar-pagina min-h-screen bg-white pb-44">
       {/* Imagen de portada */}
       <div className="relative">
         <ImagenSegura
@@ -235,8 +235,8 @@ export default function DetalleRestaurante() {
         </div>
       </div>
 
-      {/* Barra fija de WhatsApp */}
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-gray-100 bg-white/95 px-4 py-3 backdrop-blur">
+      {/* Barra fija de WhatsApp — se posa encima de la NavBar (bottom-16) */}
+      <div className="fixed inset-x-0 z-30 border-t border-gray-100 bg-white/95 px-4 py-3 backdrop-blur" style={{ bottom: 'calc(64px + env(safe-area-inset-bottom))' }}>
         <div className="mx-auto max-w-3xl">
           <a
             href={enlaceWhatsApp(rest.whatsapp, mensajeWa)}

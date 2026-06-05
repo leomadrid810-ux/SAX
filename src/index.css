@@ -5,12 +5,12 @@
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
   }
   body {
     @apply bg-white text-marca-texto font-sans text-base antialiased;
     margin: 0;
   }
-  /* Mínimo 16px en todo */
   input,
   textarea,
   select,
@@ -20,36 +20,88 @@
 }
 
 @layer components {
-  /* Botón base grande y fácil de tocar */
+  /* Botón base — táctil y claro */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-base font-bold transition active:scale-[0.97] select-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-base font-bold transition-all duration-150 active:scale-[0.94] select-none;
     min-height: 48px;
   }
   .btn-primario {
-    @apply btn bg-marca-naranja text-white shadow-sm hover:brightness-95;
+    @apply btn bg-marca-naranja text-white shadow-md hover:brightness-95 active:shadow-sm;
   }
   .btn-secundario {
-    @apply btn bg-marca-rojo text-white shadow-sm hover:brightness-95;
+    @apply btn bg-marca-rojo text-white shadow-md hover:brightness-95 active:shadow-sm;
   }
   .btn-suave {
     @apply btn bg-marca-tarjeta text-marca-texto border border-gray-200 hover:bg-gray-100;
   }
   .btn-whatsapp {
-    @apply btn bg-[#25D366] text-white shadow-sm hover:brightness-95;
+    @apply btn bg-[#25D366] text-white shadow-md hover:brightness-95 active:shadow-sm;
   }
+
+  /* Campo de entrada */
   .campo {
-    @apply w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-marca-texto outline-none focus:border-marca-naranja focus:ring-2 focus:ring-marca-naranja/30;
+    @apply w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-marca-texto outline-none transition-all duration-150 focus:border-marca-naranja focus:ring-2 focus:ring-marca-naranja/25 focus:shadow-md;
     min-height: 48px;
   }
+
+  /* Etiqueta */
   .etiqueta {
     @apply mb-1 block text-sm font-bold text-gray-600;
   }
+
+  /* Tarjeta — sombra suave, sin borde, bordes más redondeados */
   .tarjeta {
-    @apply rounded-3xl bg-marca-tarjeta border border-gray-100 shadow-sm overflow-hidden;
+    @apply rounded-3xl bg-white overflow-hidden;
+    box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.10), 0 1px 6px -1px rgba(0, 0, 0, 0.06);
   }
 }
 
-/* Scrollbar horizontal de filtros sin barra visible */
+/* ── Animaciones ─────────────────────────────────────── */
+
+/* Entrada de página (DetalleRestaurante) */
+@keyframes entrar-pagina {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animar-pagina {
+  animation: entrar-pagina 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Logo del splash screen */
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animar-logo {
+  animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Puntos de carga del splash */
+@keyframes pulso-punto {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50%       { opacity: 1;   transform: scale(1.2); }
+}
+.animar-punto {
+  animation: pulso-punto 0.9s ease-in-out infinite;
+}
+
+/* Scrollbar oculto en filtros */
 .scroll-oculto::-webkit-scrollbar {
   display: none;
 }
