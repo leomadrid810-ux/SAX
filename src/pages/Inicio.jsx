@@ -94,6 +94,14 @@ export default function Inicio() {
               >
                 <IconoSobre />
               </button>
+              <Link
+                to="/negocio/login"
+                className="flex h-11 w-11 items-center justify-center rounded-2xl bg-marca-tarjeta text-marca-texto border border-gray-200 active:scale-95"
+                aria-label="Acceso negocios"
+                title="Acceso para negocios"
+              >
+                <IconoTienda />
+              </Link>
             </div>
           </div>
 
