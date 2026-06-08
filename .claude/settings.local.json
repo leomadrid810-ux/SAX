@@ -6,7 +6,22 @@
       "PowerShell(Start-Sleep -Seconds 8; Get-Content \"C:\\\\Users\\\\LEODAN~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--proyectos-tumenu\\\\b9a4776b-8958-4cdd-bcf2-46c9bd0e579d\\\\tasks\\\\bus53nm9d.output\"; Write-Output \"--- IP publica \\(password del tunel\\) ---\"; try { \\(Invoke-WebRequest -Uri \"https://loca.lt/mytunnelpassword\" -UseBasicParsing -TimeoutSec 10\\).Content } catch { try { \\(Invoke-WebRequest -Uri \"https://api.ipify.org\" -UseBasicParsing -TimeoutSec 10\\).Content } catch { Write-Output \"No se pudo obtener\" } })",
       "PowerShell(Start-Sleep -Seconds 3; Write-Output \"--- dev server log \\(final\\) ---\"; Get-Content \"C:\\\\Users\\\\LEODAN~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--proyectos-tumenu\\\\b9a4776b-8958-4cdd-bcf2-46c9bd0e579d\\\\tasks\\\\b5dyosplc.output\" -Tail 8; Write-Output \"--- Probar tunel ---\"; try { $r = Invoke-WebRequest -Uri \"https://lazy-apes-send.loca.lt/\" -Headers @{ \"bypass-tunnel-reminder\" = \"yes\" } -UseBasicParsing -TimeoutSec 15; Write-Output \"STATUS: $\\($r.StatusCode\\)\"; if \\($r.Content -match 'id=\"root\"'\\) { Write-Output \"APP OK - sirve index.html\" } elseif \\($r.Content -match 'Blocked request'\\) { Write-Output \"BLOQUEADO POR VITE\" } else { Write-Output \\($r.Content.Substring\\(0,200\\)\\) } } catch { Write-Output \"ERROR: $_\" })",
       "PowerShell(Start-Sleep -Seconds 8; Get-Content \"C:\\\\Users\\\\LEODAN~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--proyectos-tumenu\\\\b9a4776b-8958-4cdd-bcf2-46c9bd0e579d\\\\tasks\\\\bzhkouu9a.output\"; Write-Output \"--- Probar ---\"; try { $r = Invoke-WebRequest -Uri \"https://tumenu-leo.loca.lt/\" -Headers @{ \"bypass-tunnel-reminder\" = \"yes\" } -UseBasicParsing -TimeoutSec 15; Write-Output \"STATUS: $\\($r.StatusCode\\)\"; if \\($r.Content -match 'id=\"root\"'\\) { Write-Output \"APP OK\" } } catch { Write-Output \"ERROR: $_\" })",
-      "PowerShell(& \"C:\\\\proyectos\\\\tumenu\\\\cloudflared.exe\" tunnel --url http://localhost:5173)"
+      "PowerShell(& \"C:\\\\proyectos\\\\tumenu\\\\cloudflared.exe\" tunnel --url http://localhost:5173)",
+      "Bash(git push *)",
+      "Bash(npm run *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(node *)",
+      "PowerShell(gh api *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\proyectos\\\\tumenu\" -Force)",
+      "Bash(Select-Object Name, FullName)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\proyectos\\\\tumenu\\\\src\" -Recurse -Force | Where-Object { $_.PSIsContainer } | Select-Object FullName)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\proyectos\\\\tumenu\\\\src\" -Recurse -File | Select-Object FullName | ForEach-Object { $_.FullName })",
+      "WebSearch",
+      "WebFetch(domain:unsplash.com)",
+      "WebFetch(domain:muybuenoblog.com)",
+      "WebFetch(domain:www.pexels.com)",
+      "Bash(git commit *)"
     ]
   }
 }

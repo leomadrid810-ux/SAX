@@ -11,7 +11,6 @@ import {
   IconoReloj,
   IconoAyuda,
   IconoUbicacion,
-  IconoTelefono,
   IconoComoLlegar,
   IconoFacebook,
   IconoInstagram,
@@ -21,7 +20,6 @@ import {
 import {
   precio,
   enlaceWhatsApp,
-  enlaceTelefono,
   enlaceMaps,
   enlaceSocial,
   tituloMenu,
@@ -177,7 +175,7 @@ export default function DetalleRestaurante() {
             </div>
           )}
 
-          {/* Acciones: Cómo llegar y Llamar */}
+          {/* Acciones: Cómo llegar y WhatsApp */}
           <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
             {rest.direccion && (
               <a
@@ -189,9 +187,14 @@ export default function DetalleRestaurante() {
                 <IconoComoLlegar width={20} height={20} /> Cómo llegar
               </a>
             )}
-            {rest.telefono && (
-              <a href={enlaceTelefono(rest.telefono)} className="btn-suave w-full">
-                <IconoTelefono width={20} height={20} /> Llamar
+            {rest.whatsapp && (
+              <a
+                href={enlaceWhatsApp(rest.whatsapp, mensajeWa)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-suave w-full"
+              >
+                <IconoWhatsApp width={20} height={20} /> WhatsApp
               </a>
             )}
           </div>
@@ -248,31 +251,26 @@ export default function DetalleRestaurante() {
                 <span className="h-5 w-1.5 rounded-full bg-marca-naranja" />
                 {seccion.nombre}
               </h3>
-              <div className="space-y-3">
+              <div className="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
                 {seccion.productos.map((p) => (
                   <button
                     key={p.id}
                     onClick={() => setProductoSel(p)}
-                    className="tarjeta flex w-full items-center gap-3 p-3 text-left transition hover:shadow-md active:scale-[0.99]"
+                    className="snap-start shrink-0 w-36 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm text-left transition-transform active:scale-95"
                   >
                     <ImagenSegura
                       src={p.foto}
                       alt={p.nombre}
                       emoji={emoji}
-                      className="h-20 w-20 shrink-0 rounded-2xl object-cover"
+                      className="h-28 w-full object-cover"
                     />
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-start justify-between gap-2">
-                        <h4 className="font-extrabold text-marca-texto">{p.nombre}</h4>
-                        <span className="shrink-0 font-black text-marca-naranja">
-                          {precio(p.precio)}
-                        </span>
-                      </div>
-                      {p.descripcion && (
-                        <p className="mt-0.5 line-clamp-2 text-sm text-gray-500">
-                          {p.descripcion}
-                        </p>
-                      )}
+                    <div className="p-2.5">
+                      <p className="text-sm font-bold text-marca-texto line-clamp-2 leading-tight">
+                        {p.nombre}
+                      </p>
+                      <p className="mt-1 text-sm font-black text-marca-naranja">
+                        {precio(p.precio)}
+                      </p>
                     </div>
                   </button>
                 ))}
