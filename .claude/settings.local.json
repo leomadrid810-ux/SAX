@@ -21,7 +21,8 @@
       "WebFetch(domain:unsplash.com)",
       "WebFetch(domain:muybuenoblog.com)",
       "WebFetch(domain:www.pexels.com)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "WebFetch(domain:commons.wikimedia.org)"
     ]
   }
 }
