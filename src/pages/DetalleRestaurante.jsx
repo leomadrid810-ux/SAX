@@ -16,6 +16,8 @@ import {
   IconoInstagram,
   IconoTikTok,
   IconoGlobo,
+  IconoBuscar,
+  IconoCerrar,
 } from '../components/Iconos'
 import {
   precio,
@@ -36,6 +38,7 @@ export default function DetalleRestaurante() {
   const [mostrarAyuda, setMostrarAyuda] = useState(false)
   const [verHorario, setVerHorario] = useState(false)
   const [productoSel, setProductoSel] = useState(null)
+  const [busqueda, setBusqueda] = useState('')
 
   const rest = restaurantes.find((r) => r.id === id)
 
@@ -58,6 +61,21 @@ export default function DetalleRestaurante() {
       </div>
     )
   }
+
+  const busquedaNorm = busqueda.trim().toLowerCase()
+  const menuFiltrado = busquedaNorm
+    ? (rest.menu || [])
+        .map((sec) => ({
+          ...sec,
+          productos: sec.productos.filter(
+            (p) =>
+              p.nombre.toLowerCase().includes(busquedaNorm) ||
+              (p.descripcion || '').toLowerCase().includes(busquedaNorm)
+          ),
+        }))
+        .filter((sec) => sec.productos.length > 0)
+    : rest.menu || []
+  const sinResultados = busquedaNorm.length > 0 && menuFiltrado.length === 0
 
   const cats = categoriasDe(rest)
     .map((cid) => categorias.find((c) => c.id === cid))
@@ -251,49 +269,82 @@ export default function DetalleRestaurante() {
         </div>
 
         {/* Menú / Servicios / Productos según categoría */}
-        <h2 className="mb-1 mt-8 text-xl font-black text-marca-texto">
+        <h2 className="mb-3 mt-8 text-xl font-black text-marca-texto">
           {tituloMenu(categoriasDe(rest))}
         </h2>
+
+        {/* Buscador dentro del menú */}
+        {rest.menu?.length > 0 && (
+          <div className="relative mb-5">
+            <IconoBuscar
+              width={18}
+              height={18}
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            />
+            <input
+              className="campo pl-9 pr-9"
+              placeholder="Buscar en el menú..."
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+            />
+            {busqueda && (
+              <button
+                onClick={() => setBusqueda('')}
+                aria-label="Limpiar búsqueda"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <IconoCerrar width={16} height={16} />
+              </button>
+            )}
+          </div>
+        )}
+
         {(!rest.menu || rest.menu.length === 0) && (
           <p className="py-6 text-center text-gray-500">
-            Este restaurante aún no tiene productos en su menú.
+            Este negocio aún no tiene productos en su menú.
           </p>
         )}
 
-        <div className="space-y-7">
-          {rest.menu?.map((seccion) => (
-            <section key={seccion.id}>
-              <h3 className="mb-3 flex items-center gap-2 text-lg font-extrabold text-marca-texto">
-                <span className="h-5 w-1.5 rounded-full bg-marca-naranja" />
-                {seccion.nombre}
-              </h3>
-              <div className="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
-                {seccion.productos.map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => setProductoSel(p)}
-                    className="snap-start shrink-0 w-36 flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm text-left transition-transform active:scale-95"
-                  >
-                    <ImagenSegura
-                      src={p.foto}
-                      alt={p.nombre}
-                      emoji={emoji}
-                      className="h-28 w-full shrink-0 object-cover"
-                    />
-                    <div className="p-2.5">
-                      <p className="text-sm font-bold text-marca-texto line-clamp-2 leading-tight">
-                        {p.nombre}
-                      </p>
-                      <p className="mt-1 text-sm font-black text-marca-naranja">
-                        {precio(p.precio)}
-                      </p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
+        {sinResultados ? (
+          <p className="py-8 text-center text-gray-500">
+            No encontramos ese producto 🔍
+          </p>
+        ) : (
+          <div className="space-y-7">
+            {menuFiltrado.map((seccion) => (
+              <section key={seccion.id}>
+                <h3 className="mb-3 flex items-center gap-2 text-lg font-extrabold text-marca-texto">
+                  <span className="h-5 w-1.5 rounded-full bg-marca-naranja" />
+                  {seccion.nombre}
+                </h3>
+                <div className="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
+                  {seccion.productos.map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => setProductoSel(p)}
+                      className="snap-start shrink-0 w-36 flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm text-left transition-transform active:scale-95"
+                    >
+                      <ImagenSegura
+                        src={p.foto}
+                        alt={p.nombre}
+                        emoji={emoji}
+                        className="h-28 w-full shrink-0 object-cover"
+                      />
+                      <div className="p-2.5">
+                        <p className="text-sm font-bold text-marca-texto line-clamp-2 leading-tight">
+                          {p.nombre}
+                        </p>
+                        <p className="mt-1 text-sm font-black text-marca-naranja">
+                          {precio(p.precio)}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
 
         {/* Botón de ayuda */}
         <div className="mt-8">
