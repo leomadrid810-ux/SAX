@@ -43,6 +43,8 @@ export default function EditorRestaurante({
     sitio_web: restaurante?.sitio_web || '',
     usuario: restaurante?.usuario || '',
     password: restaurante?.password || '',
+    delivery: restaurante?.delivery || 'no',
+    delivery_minimo: restaurante?.delivery_minimo || '',
     activo: restaurante?.activo ?? true,
     creado: restaurante?.creado || hoyISO(),
     horario: restaurante?.horario
@@ -300,6 +302,32 @@ export default function EditorRestaurante({
             />
           </div>
         </div>
+      </section>
+
+      {/* Delivery */}
+      <section className="space-y-3 rounded-2xl bg-marca-tarjeta p-4">
+        <h3 className="text-base font-black text-marca-texto">Servicio a domicilio</h3>
+        <div>
+          <label className="etiqueta">¿Tiene delivery?</label>
+          <select className="campo" value={form.delivery} onChange={set('delivery')}>
+            <option value="no">No tiene delivery</option>
+            <option value="si">Sí tiene delivery</option>
+            <option value="minimo">Delivery a partir de un monto mínimo</option>
+          </select>
+        </div>
+        {form.delivery === 'minimo' && (
+          <div>
+            <label className="etiqueta">Monto mínimo ($)</label>
+            <input
+              className="campo"
+              type="number"
+              value={form.delivery_minimo}
+              onChange={set('delivery_minimo')}
+              placeholder="Ej. 150"
+              inputMode="numeric"
+            />
+          </div>
+        )}
       </section>
 
       {/* Credenciales del negocio (solo admin) */}

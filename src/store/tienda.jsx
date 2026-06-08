@@ -149,6 +149,8 @@ export function TiendaProvider({ children }) {
     if (datos.creado !== undefined) obj.creado = datos.creado
     if (datos.horario !== undefined) obj.horario = datos.horario
     if (datos.override !== undefined) obj.override = datos.override
+    if (datos.delivery !== undefined) obj.delivery = datos.delivery || null
+    if (datos.delivery_minimo !== undefined) obj.delivery_minimo = datos.delivery_minimo ? Number(datos.delivery_minimo) : null
     return obj
   }
 

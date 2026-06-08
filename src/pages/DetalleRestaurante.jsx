@@ -164,6 +164,22 @@ export default function DetalleRestaurante() {
           {/* Presentación del negocio */}
           <p className="mt-3 text-gray-600">{rest.descripcion}</p>
 
+          {/* Delivery */}
+          {rest.delivery && (
+            <div className={`mt-3 flex items-center gap-3 rounded-2xl border p-3 ${
+              rest.delivery === 'no'
+                ? 'border-gray-100 bg-gray-50'
+                : 'border-green-100 bg-green-50'
+            }`}>
+              <span className="shrink-0 text-xl">🛵</span>
+              <span className={`text-sm font-bold ${rest.delivery === 'no' ? 'text-gray-500' : 'text-green-700'}`}>
+                {rest.delivery === 'no'  && 'Sin servicio a domicilio'}
+                {rest.delivery === 'si'  && 'Servicio a domicilio disponible'}
+                {rest.delivery === 'minimo' && `Delivery desde $${rest.delivery_minimo ?? 0}`}
+              </span>
+            </div>
+          )}
+
           {/* Dirección */}
           {rest.direccion && (
             <div className="mt-4 flex items-start gap-2 rounded-2xl bg-marca-tarjeta border border-gray-100 p-4">
@@ -192,7 +208,7 @@ export default function DetalleRestaurante() {
                 href={enlaceWhatsApp(rest.whatsapp, mensajeWa)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-suave w-full"
+                className="btn-whatsapp w-full"
               >
                 <IconoWhatsApp width={20} height={20} /> WhatsApp
               </a>
@@ -256,13 +272,13 @@ export default function DetalleRestaurante() {
                   <button
                     key={p.id}
                     onClick={() => setProductoSel(p)}
-                    className="snap-start shrink-0 w-36 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm text-left transition-transform active:scale-95"
+                    className="snap-start shrink-0 w-36 flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm text-left transition-transform active:scale-95"
                   >
                     <ImagenSegura
                       src={p.foto}
                       alt={p.nombre}
                       emoji={emoji}
-                      className="h-28 w-full object-cover"
+                      className="h-28 w-full shrink-0 object-cover"
                     />
                     <div className="p-2.5">
                       <p className="text-sm font-bold text-marca-texto line-clamp-2 leading-tight">
