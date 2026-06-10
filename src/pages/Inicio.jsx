@@ -67,7 +67,7 @@ export default function Inicio() {
         <div className="mx-auto max-w-3xl px-4 pt-4 pb-3">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center">
-              <img src="/sax_logo.png" alt="SAX" className="h-11 w-auto" />
+              <img src="/sax_logo.png" alt="SAX" className="h-14 w-auto" />
             </div>
             <div className="flex items-center gap-1.5">
               <button
