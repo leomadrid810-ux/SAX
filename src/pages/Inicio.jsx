@@ -64,8 +64,8 @@ export default function Inicio() {
     <div className="min-h-screen bg-white pb-28">
       {/* Encabezado */}
       <header className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-100">
-        <div className="mx-auto max-w-3xl px-4 pt-1 pb-2">
-          <div className="mb-2 flex items-center justify-between">
+        <div className="mx-auto max-w-3xl px-4 pt-0 pb-1">
+          <div className="mb-1 flex items-center justify-between">
             <div className="flex items-center">
               <img src="/sax_logo.png" alt="SAX" className="h-20 w-auto" />
             </div>
