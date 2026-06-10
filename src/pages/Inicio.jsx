@@ -66,16 +66,8 @@ export default function Inicio() {
       <header className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-100">
         <div className="mx-auto max-w-3xl px-4 pt-4 pb-3">
           <div className="mb-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <img src="/icons/icon.svg" alt="SAX" className="h-9 w-9 rounded-xl" />
-              <div>
-                <h1 className="text-2xl font-black leading-none tracking-tight text-marca-texto">
-                  SA<span className="text-marca-naranja">X</span>
-                </h1>
-                <p className="text-xs font-semibold text-gray-500">
-                  Negocios cerca de ti
-                </p>
-              </div>
+            <div className="flex items-center">
+              <img src="/sax_logo.png" alt="SAX" className="h-11 w-auto" />
             </div>
             <div className="flex items-center gap-1.5">
               <button
