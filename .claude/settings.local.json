@@ -22,7 +22,10 @@
       "WebFetch(domain:muybuenoblog.com)",
       "WebFetch(domain:www.pexels.com)",
       "Bash(git commit *)",
-      "WebFetch(domain:commons.wikimedia.org)"
+      "WebFetch(domain:commons.wikimedia.org)",
+      "Bash(python -c \"from PIL import Image; print\\('pillow ok'\\)\")",
+      "Bash(magick --version)",
+      "Bash(npm install *)"
     ]
   }
 }
