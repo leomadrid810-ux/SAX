@@ -4,7 +4,6 @@ import { useTienda } from '../store/tienda'
 import ImagenSegura from '../components/ImagenSegura'
 import BadgeAbierto from '../components/BadgeAbierto'
 import ModalAyuda from '../components/ModalAyuda'
-import Modal from '../components/Modal'
 import {
   IconoFlecha,
   IconoWhatsApp,
@@ -371,36 +370,51 @@ export default function DetalleRestaurante() {
 
       {mostrarAyuda && <ModalAyuda onCerrar={() => setMostrarAyuda(false)} />}
 
-      {/* Popup con el detalle del producto */}
       {productoSel && (
-        <Modal titulo={productoSel.nombre} onCerrar={() => setProductoSel(null)}>
-          <div className="space-y-4">
-            <ImagenSegura
-              src={productoSel.foto}
-              alt={productoSel.nombre}
-              emoji={emoji}
-              className="h-60 w-full rounded-2xl object-cover"
-            />
-            <div className="flex items-start justify-between gap-3">
-              <h3 className="text-xl font-black text-marca-texto">
-                {productoSel.nombre}
-              </h3>
-              <span className="shrink-0 text-2xl font-black text-marca-naranja">
-                {precio(productoSel.precio)}
-              </span>
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-black/60"
+          onClick={() => setProductoSel(null)}
+        >
+          <div
+            className="w-full sm:max-w-lg overflow-hidden rounded-t-3xl bg-white shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative">
+              <ImagenSegura
+                src={productoSel.foto}
+                alt={productoSel.nombre}
+                emoji={emoji}
+                className="h-[45vh] w-full object-cover"
+              />
+              <button
+                onClick={() => setProductoSel(null)}
+                aria-label="Cerrar"
+                className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white active:scale-95"
+              >
+                <IconoCerrar width={20} height={20} />
+              </button>
             </div>
-            {productoSel.descripcion && (
-              <p className="text-gray-600">{productoSel.descripcion}</p>
-            )}
-            <button
-              onClick={() => setProductoSel(null)}
-              className="btn-suave w-full"
-            >
-              Cerrar
-            </button>
+            <div className="space-y-2 px-5 py-4">
+              <div className="flex items-start justify-between gap-3">
+                <h3 className="text-xl font-black text-marca-texto">{productoSel.nombre}</h3>
+                <span className="shrink-0 text-2xl font-black text-marca-naranja">
+                  {precio(productoSel.precio)}
+                </span>
+              </div>
+              {productoSel.descripcion && (
+                <p className="text-gray-600">{productoSel.descripcion}</p>
+              )}
+              <button
+                onClick={() => setProductoSel(null)}
+                className="btn-suave mt-2 w-full"
+              >
+                Cerrar
+              </button>
+            </div>
           </div>
-        </Modal>
+        </div>
       )}
+
     </div>
   )
 }
