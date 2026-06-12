@@ -18,12 +18,14 @@ import {
 //  - onGuardar(datos), onCancelar()
 //  - permitirCredenciales: muestra usuario/contraseña (panel admin)
 //  - permitirCategorias: permite editar categorías (solo panel admin)
+//  - modoSimple: UI accesible con textos grandes y ayudas (panel negocio)
 export default function EditorRestaurante({
   restaurante,
   onGuardar,
   onCancelar,
   permitirCredenciales = false,
   permitirCategorias = false,
+  modoSimple = false,
 }) {
   const { categorias } = useTienda()
 
@@ -157,17 +159,36 @@ export default function EditorRestaurante({
     onGuardar({ ...form, menu })
   }
 
+  // Helpers de estilo según modo
+  const lbl = modoSimple
+    ? 'mb-2 block text-base font-bold text-gray-700'
+    : 'etiqueta'
+  const secTitle = modoSimple
+    ? 'text-xl font-black text-marca-texto'
+    : 'text-base font-black text-marca-texto'
+  const gap = modoSimple ? 'space-y-5' : 'space-y-3'
+
+  // Texto de ayuda debajo de un campo (solo en modoSimple)
+  const hint = (text) =>
+    modoSimple ? (
+      <p className="mt-1.5 text-sm leading-relaxed text-gray-500">{text}</p>
+    ) : null
+
   return (
-    <form onSubmit={guardar} className="space-y-6">
-      {/* Datos básicos */}
-      <section className="space-y-3">
-        <h3 className="text-base font-black text-marca-texto">Datos del restaurante</h3>
+    <form onSubmit={guardar} className={modoSimple ? 'space-y-8 p-4' : 'space-y-6'}>
+
+      {/* ── Información del negocio ─────────────────────────── */}
+      <section className={gap}>
+        <h3 className={secTitle}>Información del negocio</h3>
+
         <div>
-          <label className="etiqueta">Nombre *</label>
+          <label className={lbl}>Nombre del negocio *</label>
           <input className="campo" value={form.nombre} onChange={set('nombre')} required />
+          {hint('El nombre que verán los clientes cuando busquen tu negocio.')}
         </div>
+
         <div>
-          <label className="etiqueta">Categorías</label>
+          <label className={lbl}>Categorías</label>
           {permitirCategorias ? (
             <div className="grid grid-cols-2 gap-2">
               {categorias.map((c) => {
@@ -209,38 +230,42 @@ export default function EditorRestaurante({
             </div>
           )}
         </div>
+
         <div>
-          <label className="etiqueta">Foto del negocio</label>
+          <label className={lbl}>Foto del negocio</label>
           <SubidorFoto
             valor={form.foto}
             onChange={(url) => setForm((f) => ({ ...f, foto: url }))}
             carpeta="negocios"
           />
+          {hint('Sube una foto de tu local o tus platillos. Aparecerá en la parte de arriba de tu página.')}
         </div>
+
         <div>
-          <label className="etiqueta">Descripción / presentación del negocio</label>
+          <label className={lbl}>Descripción de tu negocio</label>
           <textarea
             className="campo"
-            rows={4}
+            rows={modoSimple ? 5 : 4}
             value={form.descripcion}
             onChange={set('descripcion')}
             placeholder="Cuéntale a tus clientes quién eres, qué ofreces y qué te hace especial."
           />
+          {hint('Escribe 2 o 3 oraciones contando qué vendes y qué te hace especial. No hace falta escribir mucho.')}
         </div>
+
         <div>
-          <label className="etiqueta">Dirección completa</label>
+          <label className={lbl}>Dirección completa</label>
           <input
             className="campo"
             value={form.direccion}
             onChange={set('direccion')}
             placeholder="Calle, número, colonia, ciudad"
           />
-          <p className="mt-1 text-xs text-gray-400">
-            Se usa para mostrar la dirección y el botón "Cómo llegar" (Google Maps).
-          </p>
+          {hint('Escribe la dirección completa para que los clientes sepan dónde encontrarte. Ej: Av. Principal 123, Col. Centro, Mérida.')}
         </div>
+
         <div>
-          <label className="etiqueta">Teléfono (para llamar)</label>
+          <label className={lbl}>Teléfono para llamar</label>
           <input
             className="campo"
             value={form.telefono}
@@ -248,9 +273,11 @@ export default function EditorRestaurante({
             placeholder="Ej. 5512345678"
             inputMode="tel"
           />
+          {hint('Número para que los clientes te llamen directamente. Solo escribe los números, sin espacios ni guiones.')}
         </div>
+
         <div>
-          <label className="etiqueta">WhatsApp</label>
+          <label className={lbl}>Número de WhatsApp</label>
           <input
             className="campo"
             value={form.whatsapp}
@@ -258,13 +285,17 @@ export default function EditorRestaurante({
             placeholder="Ej. 5215512345678"
             inputMode="tel"
           />
+          {hint('Número con código de país. Para México empieza con 521. Ejemplo: 5215512345678.')}
         </div>
 
         {/* Redes sociales */}
-        <div className="rounded-2xl border border-gray-100 bg-marca-tarjeta p-4 space-y-3">
-          <p className="text-sm font-black text-marca-texto">Redes sociales y sitio web <span className="font-normal text-gray-400">(opcional)</span></p>
+        <div className={`rounded-2xl border border-gray-100 bg-marca-tarjeta p-4 ${modoSimple ? 'space-y-5' : 'space-y-3'}`}>
+          <p className={modoSimple ? 'text-base font-black text-marca-texto' : 'text-sm font-black text-marca-texto'}>
+            Redes sociales y sitio web{' '}
+            <span className="font-normal text-gray-400">(opcional)</span>
+          </p>
           <div>
-            <label className="etiqueta">📘 Facebook</label>
+            <label className={lbl}>📘 Facebook</label>
             <input
               className="campo"
               value={form.facebook}
@@ -272,27 +303,30 @@ export default function EditorRestaurante({
               placeholder="https://facebook.com/tu-pagina  o  nombre-de-pagina"
               inputMode="url"
             />
+            {hint('Pega el enlace de tu página de Facebook o escribe solo el nombre de tu página.')}
           </div>
           <div>
-            <label className="etiqueta">📸 Instagram</label>
+            <label className={lbl}>📸 Instagram</label>
             <input
               className="campo"
               value={form.instagram}
               onChange={set('instagram')}
               placeholder="@tu_usuario  o  https://instagram.com/tu_usuario"
             />
+            {hint('Escribe tu nombre de usuario de Instagram. Ejemplo: @minegocio.')}
           </div>
           <div>
-            <label className="etiqueta">🎵 TikTok</label>
+            <label className={lbl}>🎵 TikTok</label>
             <input
               className="campo"
               value={form.tiktok}
               onChange={set('tiktok')}
               placeholder="@tu_usuario  o  https://tiktok.com/@tu_usuario"
             />
+            {hint('Escribe tu nombre de usuario de TikTok. Ejemplo: @minegocio.')}
           </div>
           <div>
-            <label className="etiqueta">🌐 Sitio web</label>
+            <label className={lbl}>🌐 Sitio web</label>
             <input
               className="campo"
               value={form.sitio_web}
@@ -300,24 +334,26 @@ export default function EditorRestaurante({
               placeholder="https://tu-sitio.com"
               inputMode="url"
             />
+            {hint('Pega el enlace completo de tu sitio web. Ejemplo: https://minegocio.com.')}
           </div>
         </div>
       </section>
 
-      {/* Delivery */}
-      <section className="space-y-3 rounded-2xl bg-marca-tarjeta p-4">
-        <h3 className="text-base font-black text-marca-texto">Servicio a domicilio</h3>
+      {/* ── Delivery ────────────────────────────────────────── */}
+      <section className={`rounded-2xl bg-marca-tarjeta p-4 ${modoSimple ? 'space-y-5' : 'space-y-3'}`}>
+        <h3 className={secTitle}>Servicio a domicilio</h3>
         <div>
-          <label className="etiqueta">¿Tiene delivery?</label>
+          <label className={lbl}>¿Haces entregas a domicilio?</label>
           <select className="campo" value={form.delivery} onChange={set('delivery')}>
-            <option value="no">No tiene delivery</option>
-            <option value="si">Sí tiene delivery</option>
-            <option value="minimo">Delivery a partir de un monto mínimo</option>
+            <option value="no">No, no hago entregas a domicilio</option>
+            <option value="si">Sí, hago entregas a domicilio</option>
+            <option value="minimo">Sí, pero a partir de un monto mínimo</option>
           </select>
+          {hint('Indica si puedes llevar los pedidos hasta la casa del cliente.')}
         </div>
         {form.delivery === 'minimo' && (
           <div>
-            <label className="etiqueta">Monto mínimo ($)</label>
+            <label className={lbl}>¿Desde qué precio haces la entrega? ($)</label>
             <input
               className="campo"
               type="number"
@@ -326,21 +362,20 @@ export default function EditorRestaurante({
               placeholder="Ej. 150"
               inputMode="numeric"
             />
+            {hint('Escribe el precio mínimo en pesos para que hagas una entrega. Solo el número, sin el signo $.')}
           </div>
         )}
       </section>
 
-      {/* Credenciales del negocio (solo admin) */}
+      {/* ── Credenciales (solo admin) ────────────────────────── */}
       {permitirCredenciales && (
         <section className="space-y-3 rounded-2xl bg-marca-tarjeta p-4">
-          <h3 className="text-base font-black text-marca-texto">
-            Acceso del dueño (panel de negocio)
-          </h3>
+          <h3 className={secTitle}>Acceso del dueño (panel de negocio)</h3>
           <p className="text-sm text-gray-500">
             Con estos datos el dueño podrá entrar a <code>/negocio/login</code>.
           </p>
           <div>
-            <label className="etiqueta">Usuario</label>
+            <label className={lbl}>Usuario</label>
             <input
               className="campo"
               value={form.usuario}
@@ -349,7 +384,7 @@ export default function EditorRestaurante({
             />
           </div>
           <div>
-            <label className="etiqueta">Contraseña</label>
+            <label className={lbl}>Contraseña</label>
             <input
               className="campo"
               value={form.password}
@@ -367,21 +402,26 @@ export default function EditorRestaurante({
         </section>
       )}
 
-      {/* Horario */}
-      <section className="space-y-2">
-        <h3 className="text-base font-black text-marca-texto">Horario</h3>
-        <div className="space-y-2">
+      {/* ── Horario ──────────────────────────────────────────── */}
+      <section className={modoSimple ? 'space-y-4' : 'space-y-2'}>
+        <h3 className={secTitle}>Horario de atención</h3>
+        {hint('Marca los días que abres. Para cada día activo escribe la hora de apertura y la hora de cierre.')}
+        <div className={modoSimple ? 'space-y-3' : 'space-y-2'}>
           {ORDEN_DIAS.map((d) => {
             const h = form.horario[d]
             return (
               <div
                 key={d}
-                className="flex flex-wrap items-center gap-2 rounded-2xl border border-gray-100 bg-white p-2"
+                className={`flex flex-wrap items-center gap-2 rounded-2xl border border-gray-100 bg-white ${modoSimple ? 'p-3' : 'p-2'}`}
               >
-                <label className="flex w-28 items-center gap-2 font-bold text-marca-texto">
+                <label
+                  className={`flex items-center gap-2 font-bold text-marca-texto ${
+                    modoSimple ? 'w-32 text-base' : 'w-28'
+                  }`}
+                >
                   <input
                     type="checkbox"
-                    className="h-5 w-5 accent-marca-naranja"
+                    className={`accent-marca-naranja ${modoSimple ? 'h-6 w-6' : 'h-5 w-5'}`}
                     checked={h.abierto}
                     onChange={(e) => cambiarHorario(d, 'abierto', e.target.checked)}
                   />
@@ -404,7 +444,9 @@ export default function EditorRestaurante({
                     />
                   </div>
                 ) : (
-                  <span className="text-sm font-semibold text-gray-400">Cerrado</span>
+                  <span className={`font-semibold text-gray-400 ${modoSimple ? 'text-base' : 'text-sm'}`}>
+                    Cerrado
+                  </span>
                 )}
               </div>
             )
@@ -412,53 +454,96 @@ export default function EditorRestaurante({
         </div>
       </section>
 
-      {/* Menú */}
-      <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-base font-black text-marca-texto">Menú</h3>
-          <button type="button" onClick={agregarSeccion} className="btn-suave py-2 text-sm">
-            <IconoMas width={18} height={18} /> Categoría
+      {/* ── Menú ─────────────────────────────────────────────── */}
+      <section className={modoSimple ? 'space-y-4' : 'space-y-3'}>
+        <div className={modoSimple ? 'space-y-3' : 'flex items-center justify-between'}>
+          <h3 className={secTitle}>Mi menú de productos</h3>
+          {modoSimple && (
+            <p className="text-sm text-gray-500">
+              Agrega grupos (por ejemplo: Tacos, Bebidas, Postres) y dentro de cada grupo pon tus productos con nombre, precio y foto.
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={agregarSeccion}
+            className={modoSimple ? 'btn-primario w-full py-4 text-base' : 'btn-suave py-2 text-sm'}
+          >
+            <IconoMas width={modoSimple ? 22 : 18} height={modoSimple ? 22 : 18} />
+            {modoSimple ? 'Agregar nueva sección al menú' : 'Categoría'}
           </button>
         </div>
 
         {form.menu.length === 0 && (
-          <p className="rounded-2xl bg-marca-tarjeta p-4 text-center text-sm text-gray-500">
-            Agrega categorías (ej. Tacos, Bebidas) y dentro sus productos.
+          <p className={`rounded-2xl bg-marca-tarjeta text-center text-gray-500 ${modoSimple ? 'p-6 text-base' : 'p-4 text-sm'}`}>
+            {modoSimple
+              ? 'Aún no tienes secciones en tu menú. Toca el botón de arriba para agregar la primera.'
+              : 'Agrega categorías (ej. Tacos, Bebidas) y dentro sus productos.'}
           </p>
         )}
 
         {form.menu.map((seccion) => (
-          <div key={seccion.id} className="rounded-2xl border border-gray-200 p-3">
-            <div className="mb-3 flex items-center gap-2">
-              <IconoLapiz width={18} height={18} className="text-gray-400" />
-              <input
-                className="campo flex-1 py-2 font-bold"
-                value={seccion.nombre}
-                onChange={(e) => renombrarSeccion(seccion.id, e.target.value)}
-                placeholder="Nombre de la categoría"
-              />
+          <div key={seccion.id} className={`rounded-2xl border border-gray-200 ${modoSimple ? 'p-4' : 'p-3'}`}>
+            {/* Encabezado de sección */}
+            <div className={`flex items-center gap-2 ${modoSimple ? 'mb-4' : 'mb-3'}`}>
+              {!modoSimple && <IconoLapiz width={18} height={18} className="text-gray-400" />}
+              <div className="flex-1">
+                {modoSimple && (
+                  <p className="mb-1 text-xs font-bold uppercase tracking-wide text-gray-400">
+                    Nombre de la sección
+                  </p>
+                )}
+                <input
+                  className={`campo font-bold ${modoSimple ? 'py-3 text-lg' : 'py-2'}`}
+                  value={seccion.nombre}
+                  onChange={(e) => renombrarSeccion(seccion.id, e.target.value)}
+                  placeholder="Nombre de la categoría"
+                />
+              </div>
               <button
                 type="button"
                 onClick={() => eliminarSeccion(seccion.id)}
-                className="rounded-xl p-2 text-marca-rojo hover:bg-red-50"
-                aria-label="Eliminar categoría"
+                className={`rounded-xl text-marca-rojo hover:bg-red-50 ${
+                  modoSimple
+                    ? 'flex items-center gap-1.5 border border-red-200 px-3 py-2 text-sm font-bold'
+                    : 'p-2'
+                }`}
+                aria-label="Eliminar sección"
               >
                 <IconoBasura width={20} height={20} />
+                {modoSimple && <span>Eliminar sección</span>}
               </button>
             </div>
 
-            <div className="space-y-3">
+            {/* Productos */}
+            <div className={modoSimple ? 'space-y-4' : 'space-y-3'}>
               {seccion.productos.map((p) => (
-                <div key={p.id} className="rounded-2xl bg-marca-tarjeta p-3">
+                <div key={p.id} className={`rounded-2xl bg-marca-tarjeta ${modoSimple ? 'p-4' : 'p-3'}`}>
+                  {modoSimple && (
+                    <div className="mb-3 flex items-center justify-between">
+                      <p className="text-sm font-bold text-gray-500">Producto</p>
+                      <button
+                        type="button"
+                        onClick={() => eliminarProducto(seccion.id, p.id)}
+                        className="flex items-center gap-1.5 rounded-xl border border-red-200 px-3 py-1.5 text-sm font-bold text-marca-rojo hover:bg-red-50"
+                      >
+                        <IconoBasura width={18} height={18} /> Eliminar producto
+                      </button>
+                    </div>
+                  )}
                   <div className="flex items-start gap-3">
                     <ImagenSegura
                       src={p.foto}
                       alt={p.nombre || 'Producto'}
-                      className="h-16 w-16 shrink-0 rounded-xl object-cover"
+                      className={`shrink-0 rounded-xl object-cover ${modoSimple ? 'h-20 w-20' : 'h-16 w-16'}`}
                     />
                     <div className="flex-1 space-y-2">
+                      {modoSimple && (
+                        <p className="text-xs font-bold uppercase tracking-wide text-gray-400">
+                          Nombre del producto
+                        </p>
+                      )}
                       <input
-                        className="campo py-2"
+                        className={`campo ${modoSimple ? 'py-3' : 'py-2'}`}
                         value={p.nombre}
                         onChange={(e) =>
                           cambiarProducto(seccion.id, p.id, 'nombre', e.target.value)
@@ -466,35 +551,53 @@ export default function EditorRestaurante({
                         placeholder="Nombre del producto"
                       />
                       <div className="flex gap-2">
-                        <input
-                          className="campo w-32 py-2"
-                          type="number"
-                          min="0"
-                          step="1"
-                          value={p.precio}
-                          onChange={(e) =>
-                            cambiarProducto(seccion.id, p.id, 'precio', e.target.value)
-                          }
-                          placeholder="Precio"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => eliminarProducto(seccion.id, p.id)}
-                          className="rounded-xl bg-white px-3 text-marca-rojo border border-gray-200"
-                          aria-label="Eliminar producto"
-                        >
-                          <IconoBasura width={20} height={20} />
-                        </button>
+                        <div className={modoSimple ? 'flex-1' : ''}>
+                          {modoSimple && (
+                            <p className="mb-1 text-xs font-bold uppercase tracking-wide text-gray-400">
+                              Precio en pesos ($)
+                            </p>
+                          )}
+                          <input
+                            className={`campo ${modoSimple ? 'w-full py-3' : 'w-32 py-2'}`}
+                            type="number"
+                            min="0"
+                            step="1"
+                            value={p.precio}
+                            onChange={(e) =>
+                              cambiarProducto(seccion.id, p.id, 'precio', e.target.value)
+                            }
+                            placeholder="Precio"
+                          />
+                        </div>
+                        {!modoSimple && (
+                          <button
+                            type="button"
+                            onClick={() => eliminarProducto(seccion.id, p.id)}
+                            className="rounded-xl border border-gray-200 bg-white px-3 text-marca-rojo"
+                            aria-label="Eliminar producto"
+                          >
+                            <IconoBasura width={20} height={20} />
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
+                  {modoSimple && (
+                    <p className="mt-3 text-xs font-bold uppercase tracking-wide text-gray-400">
+                      Descripción (opcional)
+                    </p>
+                  )}
                   <input
-                    className="campo mt-2 py-2"
+                    className={`campo ${modoSimple ? 'mt-1 py-3' : 'mt-2 py-2'}`}
                     value={p.descripcion}
                     onChange={(e) =>
                       cambiarProducto(seccion.id, p.id, 'descripcion', e.target.value)
                     }
-                    placeholder="Descripción"
+                    placeholder={
+                      modoSimple
+                        ? 'Describe el producto brevemente: ingredientes, tamaño, sabores…'
+                        : 'Descripción'
+                    }
                   />
                   <SubidorFoto
                     valor={p.foto}
@@ -502,6 +605,11 @@ export default function EditorRestaurante({
                     carpeta="productos"
                     className="mt-2"
                   />
+                  {modoSimple && (
+                    <p className="mt-1.5 text-xs text-gray-400">
+                      Sube una foto del producto para que los clientes lo vean.
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
@@ -509,23 +617,35 @@ export default function EditorRestaurante({
             <button
               type="button"
               onClick={() => agregarProducto(seccion.id)}
-              className="btn-suave mt-3 w-full py-2 text-sm"
+              className={`mt-3 w-full ${modoSimple ? 'btn-suave py-4 text-base' : 'btn-suave py-2 text-sm'}`}
             >
-              <IconoMas width={18} height={18} /> Agregar producto
+              <IconoMas width={modoSimple ? 22 : 18} height={modoSimple ? 22 : 18} />
+              {modoSimple ? `Agregar producto a "${seccion.nombre}"` : 'Agregar producto'}
             </button>
           </div>
         ))}
       </section>
 
-      {/* Acciones */}
-      <div className="sticky bottom-0 flex gap-2 bg-white pt-2 pb-1">
-        <button type="button" onClick={onCancelar} className="btn-suave flex-1">
-          Cancelar
-        </button>
-        <button type="submit" className="btn-primario flex-1">
-          Guardar
-        </button>
-      </div>
+      {/* ── Acciones finales ─────────────────────────────────── */}
+      {modoSimple ? (
+        <div className="sticky bottom-0 space-y-2 bg-white pt-4 pb-2">
+          <button type="submit" className="btn-primario w-full py-5 text-xl">
+            ✅ Guardar todos mis cambios
+          </button>
+          <button type="button" onClick={onCancelar} className="btn-suave w-full py-4 text-base">
+            Salir sin guardar
+          </button>
+        </div>
+      ) : (
+        <div className="sticky bottom-0 flex gap-2 bg-white pt-2 pb-1">
+          <button type="button" onClick={onCancelar} className="btn-suave flex-1">
+            Cancelar
+          </button>
+          <button type="submit" className="btn-primario flex-1">
+            Guardar
+          </button>
+        </div>
+      )}
     </form>
   )
 }

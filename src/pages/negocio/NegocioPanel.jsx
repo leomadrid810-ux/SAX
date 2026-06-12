@@ -21,6 +21,7 @@ export default function NegocioPanel() {
     usarHorarioAutomatico,
   } = useTienda()
   const navigate = useNavigate()
+  const [toast, setToast] = useState(null)
 
   const id = sesionNegocio.restauranteId()
   const rest = restaurantes.find((r) => r.id === id)
@@ -30,24 +31,33 @@ export default function NegocioPanel() {
     navigate('/negocio/login', { replace: true })
   }
 
-  // Mientras carga desde la nube
+  const mostrarToast = (tipo, texto) => {
+    setToast({ tipo, texto })
+    setTimeout(() => setToast(null), 5000)
+  }
+
   if (!rest && cargando) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-gray-500">
-        Cargando tu negocio…
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center px-6">
+          <p className="text-2xl font-bold text-gray-600">Cargando tu negocio…</p>
+          <p className="mt-2 text-gray-400">Por favor espera un momento</p>
+        </div>
       </div>
     )
   }
 
-  // Si la cuenta ya no existe (ej. eliminada por admin)
   if (!rest) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-4 text-center">
-        <span className="text-5xl">😕</span>
-        <p className="text-lg font-bold text-marca-texto">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 text-center">
+        <span className="text-6xl">😕</span>
+        <p className="text-xl font-bold text-marca-texto">
           No encontramos tu restaurante.
         </p>
-        <button onClick={salir} className="btn-primario">
+        <p className="text-gray-500">
+          Puede que tu cuenta haya sido desactivada. Contacta al administrador.
+        </p>
+        <button onClick={salir} className="btn-primario px-8 py-4 text-lg">
           Volver a iniciar sesión
         </button>
       </div>
@@ -55,39 +65,59 @@ export default function NegocioPanel() {
   }
 
   const guardar = async (datos) => {
-    // El dueño no puede cambiar su usuario/contraseña ni el estado activo desde aquí:
-    // se conservan los valores actuales.
     const { usuario, password, activo, ...editable } = datos
     const ok = await actualizarRestaurante(rest.id, editable)
-    if (ok) alert('¡Cambios guardados!')
+    if (ok) {
+      mostrarToast('ok', '¡Sus datos se guardaron correctamente!')
+    } else {
+      mostrarToast('error', 'No se pudo guardar. Revisa tu conexión e intenta de nuevo.')
+    }
   }
 
   return (
-    <div className="min-h-screen bg-white pb-10">
-      <header className="sticky top-0 z-30 border-b border-gray-100 bg-white">
-        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
+    <div className="min-h-screen bg-gray-50 pb-10">
+      {/* Toast de éxito / error */}
+      {toast && (
+        <div
+          className={`fixed left-4 right-4 top-4 z-50 rounded-2xl px-5 py-4 text-center text-lg font-bold shadow-2xl ${
+            toast.tipo === 'ok' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+          }`}
+        >
+          {toast.tipo === 'ok' ? '✅ ' : '❌ '}
+          {toast.texto}
+        </div>
+      )}
+
+      {/* Encabezado */}
+      <header className="sticky top-0 z-30 border-b border-gray-200 bg-white shadow-sm">
+        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
           <div className="min-w-0">
-            <h1 className="truncate text-lg font-black text-marca-texto">{rest.nombre}</h1>
-            <div className="flex items-center gap-2">
-              <p className="text-xs font-semibold text-gray-500">Tu panel de negocio</p>
+            <h1 className="truncate text-xl font-black text-marca-texto">{rest.nombre}</h1>
+            <div className="mt-0.5 flex items-center gap-2">
+              <p className="text-sm font-semibold text-gray-500">Mi panel de negocio</p>
               <BadgeAbierto restaurante={rest} className="px-2 py-0 text-xs" />
             </div>
           </div>
-          <button onClick={salir} className="btn-suave py-2 text-sm">
-            <IconoSalir width={18} height={18} /> Salir
+          <button onClick={salir} className="btn-suave px-4 py-3">
+            <IconoSalir width={20} height={20} /> Salir
           </button>
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-4 pt-4">
+      <main className="mx-auto max-w-3xl space-y-4 px-4 pt-5">
+        {/* Aviso negocio inactivo */}
         {!rest.activo && (
-          <div className="mb-4 rounded-2xl bg-orange-50 border border-orange-200 p-3 text-sm text-marca-naranja">
-            Tu restaurante está <strong>inactivo</strong> y no se muestra al público.
-            Contacta al administrador para activarlo.
+          <div className="rounded-2xl border-2 border-orange-300 bg-orange-50 p-4">
+            <p className="text-base font-bold text-orange-800">
+              ⚠️ Tu negocio no es visible para los clientes
+            </p>
+            <p className="mt-1 text-sm text-orange-700">
+              Tu restaurante está inactivo. Por favor contacta al administrador para que lo active.
+            </p>
           </div>
         )}
 
-        {/* Control manual de estado (prioridad sobre el horario) */}
+        {/* Control de estado abierto / cerrado */}
         <ControlEstado
           rest={rest}
           fijarEstadoManual={fijarEstadoManual}
@@ -96,81 +126,71 @@ export default function NegocioPanel() {
 
         <TutorialNegocio />
 
-        <div className="mb-4 mt-2 flex items-center justify-between">
-          <p className="text-sm text-gray-500">
-            Edita tus datos y tu menú. Los cambios se ven al instante.
-          </p>
-          <Link
-            to={`/restaurante/${rest.id}`}
-            target="_blank"
-            className="btn-suave py-2 text-sm"
-          >
-            <IconoOjo width={18} height={18} /> Ver mi página
-          </Link>
-        </div>
+        {/* Ver mi página */}
+        <Link
+          to={`/restaurante/${rest.id}`}
+          target="_blank"
+          className="btn-suave w-full py-4 text-base"
+        >
+          <IconoOjo width={20} height={20} /> Ver cómo me ven los clientes
+        </Link>
 
-        <EditorRestaurante
-          restaurante={rest}
-          permitirCredenciales={false}
-          onGuardar={guardar}
-          onCancelar={() => navigate('/')}
-        />
+        {/* Editor de datos y menú */}
+        <div className="rounded-2xl bg-white shadow-sm">
+          <EditorRestaurante
+            restaurante={rest}
+            permitirCredenciales={false}
+            modoSimple={true}
+            onGuardar={guardar}
+            onCancelar={() => navigate('/')}
+          />
+        </div>
       </main>
     </div>
   )
 }
 
-// Tarjeta grande para abrir/cerrar el negocio manualmente desde el celular.
 function ControlEstado({ rest, fijarEstadoManual, usarHorarioAutomatico }) {
   const abierto = estaAbiertoEfectivo(rest)
   const manual = hayOverrideHoy(rest)
 
   return (
     <div
-      className={`rounded-3xl border-2 p-5 transition ${
-        abierto
-          ? 'border-green-200 bg-green-50'
-          : 'border-red-200 bg-red-50'
+      className={`rounded-3xl border-2 p-5 ${
+        abierto ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'
       }`}
     >
-      <div className="mb-1 flex items-center gap-2">
+      <div className="mb-2 flex items-center gap-3">
         <span
-          className={`h-3.5 w-3.5 rounded-full ${
-            abierto ? 'bg-green-500' : 'bg-red-500'
-          }`}
+          className={`h-4 w-4 rounded-full ${abierto ? 'bg-green-500' : 'bg-red-500'}`}
         />
-        <p className="text-lg font-black text-marca-texto">
-          {abierto ? 'Estás abierto' : 'Estás cerrado'}
+        <p className="text-xl font-black text-marca-texto">
+          {abierto ? 'Ahora estás ABIERTO' : 'Ahora estás CERRADO'}
         </p>
       </div>
 
-      <p className="mb-1 flex items-center gap-1.5 text-sm text-gray-600">
+      <p className="mb-1 flex items-center gap-2 text-sm text-gray-600">
         <IconoReloj width={16} height={16} />
-        {horarioDeHoy(rest.horario)}
-      </p>
-      <p className="mb-4 text-sm text-gray-500">
-        {manual ? (
-          <>
-            Estado <strong>manual</strong> activado por ti para hoy. Tiene prioridad
-            sobre tu horario. Mañana volverá a tu horario automático.
-          </>
-        ) : (
-          <>Tu estado se calcula con tu horario. Puedes cambiarlo manualmente cuando quieras.</>
-        )}
+        Horario de hoy: {horarioDeHoy(rest.horario)}
       </p>
 
-      {/* Botón grande para cambiar el estado */}
+      <p className="mb-5 text-sm text-gray-500">
+        {manual
+          ? 'Cambiaste tu estado manualmente. Mañana volverá a tu horario normal.'
+          : 'Tu estado cambia solo según tu horario. Puedes cambiarlo aquí cuando quieras.'}
+      </p>
+
       {abierto ? (
         <button
           onClick={() => fijarEstadoManual(rest.id, 'cerrado')}
-          className="btn-secundario w-full text-lg"
+          className="btn-secundario w-full py-4 text-lg"
         >
           🔴 Cerré por hoy
         </button>
       ) : (
         <button
           onClick={() => fijarEstadoManual(rest.id, 'abierto')}
-          className="btn w-full bg-green-600 text-lg text-white hover:brightness-95"
+          className="btn w-full bg-green-600 py-4 text-lg text-white hover:brightness-95"
         >
           🟢 Estoy abierto ahora
         </button>
@@ -179,9 +199,9 @@ function ControlEstado({ rest, fijarEstadoManual, usarHorarioAutomatico }) {
       {manual && (
         <button
           onClick={() => usarHorarioAutomatico(rest.id)}
-          className="btn-suave mt-2 w-full text-sm"
+          className="btn-suave mt-3 w-full py-3"
         >
-          <IconoCheck width={18} height={18} /> Usar mi horario automático
+          <IconoCheck width={18} height={18} /> Volver a mi horario automático
         </button>
       )}
     </div>
