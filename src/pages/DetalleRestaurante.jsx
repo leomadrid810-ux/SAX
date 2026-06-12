@@ -36,8 +36,7 @@ export default function DetalleRestaurante() {
   const { restaurantes, categorias, cargando } = useTienda()
   const [mostrarAyuda, setMostrarAyuda] = useState(false)
   const [verHorario, setVerHorario] = useState(false)
-  const [productoSel, setProductoSel] = useState(null)
-  const [busqueda, setBusqueda] = useState('')
+const [busqueda, setBusqueda] = useState('')
 
   const rest = restaurantes.find((r) => r.id === id)
 
@@ -318,10 +317,9 @@ export default function DetalleRestaurante() {
                 </h3>
                 <div className="flex gap-3 overflow-x-auto pb-3 snap-x snap-mandatory [&::-webkit-scrollbar]:hidden">
                   {seccion.productos.map((p) => (
-                    <button
+                    <div
                       key={p.id}
-                      onClick={() => setProductoSel(p)}
-                      className="snap-start shrink-0 w-36 flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm text-left transition-transform active:scale-95"
+                      className="snap-start shrink-0 w-36 flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm"
                     >
                       <ImagenSegura
                         src={p.foto}
@@ -337,7 +335,7 @@ export default function DetalleRestaurante() {
                           {precio(p.precio)}
                         </p>
                       </div>
-                    </button>
+                    </div>
                   ))}
                 </div>
               </section>
@@ -369,51 +367,6 @@ export default function DetalleRestaurante() {
       </div>
 
       {mostrarAyuda && <ModalAyuda onCerrar={() => setMostrarAyuda(false)} />}
-
-      {productoSel && (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/60"
-          onClick={() => setProductoSel(null)}
-        >
-          <div
-            className="w-full sm:max-w-lg overflow-hidden rounded-t-3xl bg-white shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative">
-              <ImagenSegura
-                src={productoSel.foto}
-                alt={productoSel.nombre}
-                emoji={emoji}
-                className="h-[45vh] w-full object-cover"
-              />
-              <button
-                onClick={() => setProductoSel(null)}
-                aria-label="Cerrar"
-                className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-white active:scale-95"
-              >
-                <IconoCerrar width={20} height={20} />
-              </button>
-            </div>
-            <div className="space-y-2 px-5 py-4">
-              <div className="flex items-start justify-between gap-3">
-                <h3 className="text-xl font-black text-marca-texto">{productoSel.nombre}</h3>
-                <span className="shrink-0 text-2xl font-black text-marca-naranja">
-                  {precio(productoSel.precio)}
-                </span>
-              </div>
-              {productoSel.descripcion && (
-                <p className="text-gray-600">{productoSel.descripcion}</p>
-              )}
-              <button
-                onClick={() => setProductoSel(null)}
-                className="btn-suave mt-2 w-full"
-              >
-                Cerrar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
     </div>
   )
