@@ -83,7 +83,7 @@ export default function EditorRestaurante({
   const agregarSeccion = () => {
     setForm((f) => ({
       ...f,
-      menu: [...f.menu, { id: nuevoId('cat'), nombre: 'Nueva categoría', productos: [] }],
+      menu: [{ id: nuevoId('cat'), nombre: 'Nueva categoría', productos: [] }, ...f.menu],
     }))
   }
   const renombrarSeccion = (idSeccion, nombre) => {
