@@ -256,6 +256,24 @@ export function TiendaProvider({ children }) {
     })
 
   // ---- Configuración / autenticación ----
+  const cambiarPasswordNegocio = async (negocioId, usuario, passwordActual, passwordNueva) => {
+    try {
+      const { data: idValido } = await supabase.rpc('login_negocio', {
+        p_usuario: usuario,
+        p_password: passwordActual,
+      })
+      if (!idValido) return { ok: false, error: 'credenciales' }
+      const { error: e } = await supabase.rpc('set_credenciales', {
+        p_negocio_id: negocioId,
+        p_password: passwordNueva,
+      })
+      if (e) return { ok: false, error: 'servidor' }
+      return { ok: true }
+    } catch {
+      return { ok: false, error: 'servidor' }
+    }
+  }
+
   const cambiarAdminPassword = async (nueva) => {
     const { error: e } = await supabase.rpc('set_admin_password', { p_nueva: nueva })
     if (e) {
@@ -297,6 +315,7 @@ export function TiendaProvider({ children }) {
     agregarSolicitud,
     actualizarSolicitud,
     eliminarSolicitud,
+    cambiarPasswordNegocio,
     cambiarAdminPassword,
     validarAdmin,
     validarNegocio,

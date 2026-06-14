@@ -5,7 +5,7 @@ import { sesionNegocio } from '../../store/sesion'
 import EditorRestaurante from '../../components/EditorRestaurante'
 import BadgeAbierto from '../../components/BadgeAbierto'
 import TutorialNegocio from '../../components/TutorialNegocio'
-import { IconoSalir, IconoOjo, IconoReloj, IconoCheck } from '../../components/Iconos'
+import { IconoSalir, IconoOjo, IconoOjoCerrado, IconoReloj, IconoCheck, IconoCandado } from '../../components/Iconos'
 import {
   estaAbiertoEfectivo,
   hayOverrideHoy,
@@ -19,6 +19,7 @@ export default function NegocioPanel() {
     actualizarRestaurante,
     fijarEstadoManual,
     usarHorarioAutomatico,
+    cambiarPasswordNegocio,
   } = useTienda()
   const navigate = useNavigate()
   const [toast, setToast] = useState(null)
@@ -135,6 +136,14 @@ export default function NegocioPanel() {
           <IconoOjo width={20} height={20} /> Ver cómo me ven los clientes
         </Link>
 
+        {/* Cambiar contraseña */}
+        <CambiarContrasena
+          negocioId={rest.id}
+          usuario={rest.usuario}
+          mostrarToast={mostrarToast}
+          cambiarPasswordNegocio={cambiarPasswordNegocio}
+        />
+
         {/* Editor de datos y menú */}
         <div className="rounded-2xl bg-white shadow-sm">
           <EditorRestaurante
@@ -146,6 +155,148 @@ export default function NegocioPanel() {
           />
         </div>
       </main>
+    </div>
+  )
+}
+
+function CambiarContrasena({ negocioId, usuario, mostrarToast, cambiarPasswordNegocio }) {
+  const [abierto, setAbierto] = useState(false)
+  const [form, setForm] = useState({ actual: '', nueva: '', confirmar: '' })
+  const [verActual, setVerActual] = useState(false)
+  const [verNueva, setVerNueva] = useState(false)
+  const [guardando, setGuardando] = useState(false)
+  const [errorLocal, setErrorLocal] = useState('')
+
+  const cambiar = (campo, valor) => {
+    setForm((f) => ({ ...f, [campo]: valor }))
+    setErrorLocal('')
+  }
+
+  const cerrar = () => {
+    setAbierto(false)
+    setForm({ actual: '', nueva: '', confirmar: '' })
+    setVerActual(false)
+    setVerNueva(false)
+    setErrorLocal('')
+  }
+
+  const guardar = async (e) => {
+    e.preventDefault()
+    if (!form.actual) { setErrorLocal('Escribe tu contraseña actual.'); return }
+    if (!form.nueva || form.nueva.length < 4) { setErrorLocal('La nueva contraseña debe tener al menos 4 caracteres.'); return }
+    if (form.nueva !== form.confirmar) { setErrorLocal('Las contraseñas nuevas no coinciden.'); return }
+    setGuardando(true)
+    const resultado = await cambiarPasswordNegocio(negocioId, usuario, form.actual, form.nueva)
+    setGuardando(false)
+    if (resultado.ok) {
+      cerrar()
+      mostrarToast('ok', '¡Su contraseña se cambió correctamente!')
+    } else if (resultado.error === 'credenciales') {
+      setErrorLocal('La contraseña actual es incorrecta. Verifícala e intenta de nuevo.')
+    } else {
+      setErrorLocal('No se pudo cambiar. Revisa tu conexión e inténtalo de nuevo.')
+    }
+  }
+
+  return (
+    <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+      <button
+        onClick={() => (abierto ? cerrar() : setAbierto(true))}
+        className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"
+      >
+        <div className="flex items-center gap-3">
+          <IconoCandado width={22} height={22} className="text-gray-500" />
+          <span className="text-base font-bold text-marca-texto">Cambiar contraseña</span>
+        </div>
+        <span className="text-lg text-gray-400">{abierto ? '▲' : '▼'}</span>
+      </button>
+
+      {abierto && (
+        <div className="border-t border-gray-100 px-5 pb-6 pt-4">
+          <p className="mb-5 text-sm text-gray-500">
+            Escribe tu contraseña actual y luego la nueva para confirmar el cambio.
+          </p>
+          <form onSubmit={guardar} className="space-y-4">
+            <div>
+              <label className="etiqueta">Contraseña actual</label>
+              <div className="relative">
+                <input
+                  type={verActual ? 'text' : 'password'}
+                  className="campo pr-14"
+                  value={form.actual}
+                  onChange={(e) => cambiar('actual', e.target.value)}
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setVerActual((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400"
+                  tabIndex={-1}
+                  aria-label={verActual ? 'Ocultar contraseña' : 'Ver contraseña'}
+                >
+                  {verActual
+                    ? <IconoOjoCerrado width={22} height={22} />
+                    : <IconoOjo width={22} height={22} />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="etiqueta">Nueva contraseña</label>
+              <div className="relative">
+                <input
+                  type={verNueva ? 'text' : 'password'}
+                  className="campo pr-14"
+                  value={form.nueva}
+                  onChange={(e) => cambiar('nueva', e.target.value)}
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setVerNueva((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400"
+                  tabIndex={-1}
+                  aria-label={verNueva ? 'Ocultar contraseña' : 'Ver contraseña'}
+                >
+                  {verNueva
+                    ? <IconoOjoCerrado width={22} height={22} />
+                    : <IconoOjo width={22} height={22} />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="etiqueta">Confirmar nueva contraseña</label>
+              <input
+                type={verNueva ? 'text' : 'password'}
+                className="campo"
+                value={form.confirmar}
+                onChange={(e) => cambiar('confirmar', e.target.value)}
+                autoComplete="new-password"
+              />
+            </div>
+
+            {errorLocal && (
+              <div className="rounded-xl bg-red-50 px-4 py-3 text-sm font-bold text-red-700">
+                ⚠️ {errorLocal}
+              </div>
+            )}
+
+            <div className="flex gap-3 pt-1">
+              <button type="button" onClick={cerrar} className="btn-suave flex-1 py-4 text-base">
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="btn-primario flex-1 py-4 text-base"
+                disabled={guardando}
+              >
+                {guardando ? 'Guardando…' : 'Cambiar'}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   )
 }
